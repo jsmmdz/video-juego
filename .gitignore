@@ -1,0 +1,24 @@
+# SO
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Builds y temporales
+build/
+dist/
+bin/
+obj/
+tmp/
+*.log
+
+# Dependencias
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+venv/

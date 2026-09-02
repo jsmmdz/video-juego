@@ -22,3 +22,24 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+*.csproj
+*.sln
+*.unityproj
+sysinfo.txt
+*.apk
+*.aab
+*.unitypackage
+
+# Godot
+.godot/
+.import/
+export_presets.cfg

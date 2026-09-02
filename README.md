@@ -10,18 +10,19 @@ destruir la **Barrera** que separa a ambas sociedades.
 
 ## Estado
 
-**Prototipo en construcción.** La lógica está diagramada en cuatro módulos y se está armando
-con primitivas mientras llegan los assets de ilustración.
+**Prototipo jugable con primitivas.** Los cuatro módulos están implementados en **Unity + C#**
+y se pueden probar sin ningún arte final.
 
-| Módulo | Diagramado | Implementado |
-|---|---|---|
-| Movimiento del jugador | ✅ | ⬜ |
-| Sistema de sospecha | ✅ | ⬜ |
-| Cámara seguidora | ✅ | ⬜ |
-| Vista del personaje (billboard) | ✅ | ⬜ |
+| Módulo | Diagramado | Implementado | Probado en Unity |
+|---|---|---|---|
+| Movimiento del jugador | ✅ | ✅ | ⬜ |
+| Sistema de sospecha | ✅ | ✅ | ⬜ |
+| Cámara seguidora | ✅ | ✅ | ⬜ |
+| Vista del personaje (billboard) | ✅ | ✅ | ⬜ |
 
-⚠️ **El motor aún no está decidido.** Es el bloqueo más urgente — ver
-[decisiones abiertas](docs/tecnico/decisiones-abiertas.md).
+Para probarlo: abre el repositorio como proyecto de Unity y usa el menú
+**The Silent Divide ▸ Construir escena de prototipo**. Guía completa en
+[setup-unity.md](docs/tecnico/setup-unity.md).
 
 ## Documentación
 
@@ -38,6 +39,7 @@ docs/
 │   ├── paletas.md             paletas de color
 │   └── sistemas-de-juego.md   perfiles, atributos, inventario, detección
 └── tecnico/      especificación de programación
+    ├── setup-unity.md         cómo abrir y probar el proyecto
     ├── 00-arquitectura.md     orden de ejecución dentro del fotograma
     ├── 01-movimiento.md       ┐
     ├── 02-sospecha.md         │ un documento por flowchart,
@@ -46,6 +48,9 @@ docs/
     ├── decisiones-abiertas.md contradicciones y decisiones pendientes
     └── convenciones.md        nomenclatura, código, git
 ```
+
+El código vive en `Assets/Scripts/`, un archivo por módulo del flowchart. Cada script cita en su
+cabecera el nodo de Figma y el documento que implementa.
 
 Plan de trabajo: [ROADMAP.md](ROADMAP.md)
 

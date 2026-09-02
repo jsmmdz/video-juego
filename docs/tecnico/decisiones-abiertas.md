@@ -6,25 +6,19 @@ deben resolverse antes de dar por cerrado el módulo correspondiente.
 
 ---
 
-## 1. 🔴 Motor y lenguaje
+## 1. ✅ Motor y lenguaje — RESUELTO
 
-**Estado:** sin decidir en ninguna fuente.
+**Decisión: Unity + C#.** Confirmado por el equipo el 2026-09-02.
 
-Los flowcharts describen primitivas que existen tal cual en Unity: movimiento acumulado
-aplicado en una única llamada por fotograma, plano orientado a cámara, actualización de
-cámara en un paso posterior al de física.
+Encaja con lo diagramado sin traducción: los flowcharts describen primitivas que existen tal
+cual en Unity (movimiento acumulado aplicado en una única llamada por fotograma, plano
+orientado a cámara, actualización de cámara en el paso posterior al de física).
 
-**Recomendación: Unity + C#.** Encaja con lo diagramado sin traducción, tiene el mejor soporte
-para el enfoque de sprites en mundo 3D, y facilita la distribución multiplataforma que asume el
-modelo de monetización (Steam / PlayStation / Epic).
-
-*Alternativa:* Godot 4 + C#/GDScript, si se prioriza el peso del proyecto y la licencia.
-
-**Bloquea:** la creación del proyecto y toda la estructura de código. Es la decisión más urgente.
+Puesta en marcha: `setup-unity.md`.
 
 ---
 
-## 2. 🔴 Esquema de control: point-and-click vs. WASD
+## 2. 🟡 Esquema de control: point-and-click vs. WASD
 
 **Contradicción dentro del propio PDF de pitch:**
 
@@ -44,7 +38,9 @@ diagramado y programado, y es coherente con la cámara seguidora y con las mecá
 sigilo en tiempo real (esprintar hace ruido, agacharse reduce visibilidad — verbos que no
 existen en point-and-click).
 
-**Acción:** corregir la página 6 del pitch. El prototipo avanza con WASD.
+**Estado:** el prototipo está implementado con **WASD**, que es lo que dicen dos de las tres
+fuentes y lo único que está diagramado. Queda pendiente **corregir la página 6 del pitch**
+para que el documento no se contradiga a sí mismo.
 
 ---
 

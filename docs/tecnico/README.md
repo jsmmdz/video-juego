@@ -20,5 +20,21 @@ llegan los assets.
 
 | Otros | |
 |---|---|
+| `setup-unity.md` | Cómo abrir el proyecto y verificar los módulos |
 | `decisiones-abiertas.md` | Contradicciones y decisiones pendientes de confirmar |
 | `convenciones.md` | Nomenclatura, ramas, commits |
+
+## Implementación
+
+**Motor: Unity + C#.** El código está en `Assets/Scripts/`, un archivo por módulo:
+
+| Módulo | Script |
+|---|---|
+| Movimiento | `Assets/Scripts/Player/PlayerMovement.cs` |
+| Sospecha | `Assets/Scripts/Suspicion/SuspicionSystem.cs` |
+| Cámara | `Assets/Scripts/CameraSystem/FollowCamera.cs` |
+| Vista del personaje | `Assets/Scripts/Rendering/DirectionalBillboard.cs` |
+
+El orden de ejecución dentro del fotograma se fija con `Assets/Scripts/ExecutionOrder.cs`, no se
+deja al azar: Unity no garantiza el orden entre componentes en `LateUpdate` sin una prioridad
+explícita.

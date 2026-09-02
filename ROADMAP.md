@@ -5,28 +5,32 @@ El objetivo del prototipo **no es representar el pitch**, sino validar la mecán
 
 ## Fase 0 — Desbloquear (ahora)
 
-- [ ] **Decidir motor y lenguaje** — recomendación: Unity + C#.
-      Ver [decisiones abiertas #1](docs/tecnico/decisiones-abiertas.md).
-- [ ] **Confirmar el esquema de control** — recomendación: WASD.
+- [x] **Decidir motor y lenguaje** → **Unity + C#**.
+- [x] Subir la estructura de código (`Assets/Scripts/`).
+- [ ] Generar `ProjectSettings/` y `Packages/` abriendo el repo en Unity, y commitearlos.
+- [ ] **Corregir la página 6 del pitch**, que describe point-and-click en lugar de WASD.
       Ver [decisiones abiertas #2](docs/tecnico/decisiones-abiertas.md).
-- [ ] Crear el proyecto y subir su estructura base.
 
 ## Fase 1 — Prototipo con primitivas
 
 Cuatro módulos, en el orden en que se pueden probar de forma aislada.
 
-- [ ] **Blockout plano** de un sector, a escala real (100 × 100 m).
-- [ ] **Movimiento** (`01-movimiento.md`) — caminata + gravedad, una sola aplicación por
+- [x] **Blockout plano** de un sector, a escala real (100 × 100 m) — generado por
+      `PrototypeSceneBuilder`.
+- [x] **Movimiento** (`01-movimiento.md`) — caminata + gravedad, una sola aplicación por
       fotograma. *Verificable:* la cápsula camina, gira hacia donde va, y cae sin flotar ni
       despegarse en rampas.
-- [ ] **Cámara seguidora** (`03-camara.md`) — ángulo fijo por zona, seguimiento suave.
+- [x] **Cámara seguidora** (`03-camara.md`) — ángulo fijo por zona, seguimiento suave.
       *Verificable:* no tiembla en movimiento continuo y no rota nunca.
-- [ ] **Vista del personaje** (`04-vista-personaje.md`) — billboard + 6 sectores, con cuatro
+- [x] **Vista del personaje** (`04-vista-personaje.md`) — billboard + 6 sectores, con cuatro
       rectángulos de color en lugar de arte. *Verificable:* el color cambia al cruzar cada
       sector y no parpadea en los bordes.
-- [ ] **Sospecha** (`02-sospecha.md`) — volúmenes de zona vigilada + barra de UI.
+- [x] **Sospecha** (`02-sospecha.md`) — volúmenes de zona vigilada + barra de UI.
       *Verificable:* sube dentro, baja fuera, satura en ambos extremos, y `detectado` queda
       congelado al dispararse.
+
+- [ ] **Abrir en Unity y verificar los cuatro módulos** contra la tabla de
+      [setup-unity.md](docs/tecnico/setup-unity.md). ← siguiente paso
 
 **Hito:** el bucle completo funciona. Se puede entrar a una zona, ver subir la barra, salir a
 tiempo, y ser detectado si no se sale.

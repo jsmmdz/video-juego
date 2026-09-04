@@ -72,7 +72,7 @@ namespace SilentDivide.EditorTools
             BuildMoon(canvasGo.transform);
 
             GameObject menuScreen = BuildMenuScreen(canvasGo.transform, out MenuButton play,
-                                                    out MenuButton settings, out List<MenuItem> menuItems);
+                                                    out MenuButton settings, out List<MenuEntry> menuItems);
             SettingsPanel settingsPanel = BuildSettingsScreen(canvasGo.transform);
 
             // El escalado de texto de accesibilidad recorre todo el canvas, Ajustes incluido.
@@ -196,7 +196,7 @@ namespace SilentDivide.EditorTools
         // ── Pantalla de inicio ───────────────────────────────────────────────────────────────
 
         private static GameObject BuildMenuScreen(
-            Transform parent, out MenuButton play, out MenuButton settings, out List<MenuItem> items)
+            Transform parent, out MenuButton play, out MenuButton settings, out List<MenuEntry> items)
         {
             var screen = new GameObject("Pantalla - Inicio", typeof(RectTransform));
             screen.transform.SetParent(parent, false);
@@ -205,7 +205,7 @@ namespace SilentDivide.EditorTools
             BuildScrim(screen.transform, PanelWidthFrac);
             BuildTitle(screen.transform);
 
-            items = new List<MenuItem>();
+            items = new List<MenuEntry>();
             play     = BuildOptionRow(screen.transform, "Jugar",   0, items);
             settings = BuildOptionRow(screen.transform, "Ajustes", 1, items);
 
@@ -244,7 +244,7 @@ namespace SilentDivide.EditorTools
 
         /// <summary>Rótulo centrado en la columna con el filete debajo, a todo el ancho de esta.</summary>
         private static MenuButton BuildOptionRow(
-            Transform parent, string text, int index, List<MenuItem> collected)
+            Transform parent, string text, int index, List<MenuEntry> collected)
         {
             const float labelHeight = 46f;
             const float ruleGap     = 12f;
@@ -339,7 +339,7 @@ namespace SilentDivide.EditorTools
             // salida con el teclado. Por eso el paso es ajustado y está medido, no tanteado.
             float y = -(TitleTopFrac * RefHeight + 100f);
 
-            var items = new List<MenuItem>();
+            var items = new List<MenuEntry>();
 
             Section(screen.transform, "GRÁFICOS", rowWidth, ref y);
             MenuOption fullscreen = OptionRow(screen.transform, rowWidth, ref y, items);
@@ -449,7 +449,7 @@ namespace SilentDivide.EditorTools
         }
 
         private static MenuOption OptionRow(
-            Transform parent, float width, ref float y, List<MenuItem> collected)
+            Transform parent, float width, ref float y, List<MenuEntry> collected)
         {
             GameObject go = SettingsRow(parent, "Fila - Opción", width, ref y,
                                         out Image hit, out TextMeshProUGUI nameLabel, out Image rule);
@@ -468,7 +468,7 @@ namespace SilentDivide.EditorTools
         }
 
         private static MenuSlider SliderRow(
-            Transform parent, float width, ref float y, List<MenuItem> collected)
+            Transform parent, float width, ref float y, List<MenuEntry> collected)
         {
             GameObject go = SettingsRow(parent, "Fila - Barra", width, ref y,
                                         out Image hit, out TextMeshProUGUI nameLabel, out Image rule);
@@ -527,7 +527,7 @@ namespace SilentDivide.EditorTools
         }
 
         private static MenuButton BuildBackButton(
-            Transform parent, float width, float y, List<MenuItem> collected)
+            Transform parent, float width, float y, List<MenuEntry> collected)
         {
             const float labelHeight = 36f;
             const float ruleHeight  = 1.5f;

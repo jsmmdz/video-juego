@@ -15,7 +15,7 @@ namespace SilentDivide.UI
     public sealed class SettingsPanel : MonoBehaviour
     {
         [Header("Filas, en orden de navegación")]
-        [SerializeField] private List<MenuItem> items = new List<MenuItem>();
+        [SerializeField] private List<MenuEntry> items = new List<MenuEntry>();
 
         [Header("Gráficos")]
         [SerializeField] private MenuOption fullscreenOption;

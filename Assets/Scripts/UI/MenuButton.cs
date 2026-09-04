@@ -14,9 +14,9 @@ namespace SilentDivide.UI
     /// reposo el filete es gris tenue; con el foco se enciende en el ámbar de las lámparas y el
     /// texto sube a blanco; al pulsar, el filete además engorda. Deshabilitado apaga los dos.
     ///
-    /// La navegación y el foco compartido entre ratón y teclado están en <see cref="MenuItem"/>.
+    /// La navegación y el foco compartido entre ratón y teclado están en <see cref="MenuEntry"/>.
     /// </summary>
-    public sealed class MenuButton : MenuItem,
+    public sealed class MenuButton : MenuEntry,
         IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
     {
         [SerializeField] private TextMeshProUGUI label;

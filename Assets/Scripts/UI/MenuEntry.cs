@@ -14,7 +14,7 @@ namespace SilentDivide.UI
     /// igual que hacerlo con las flechas. Sin eso, un menú de teclado y ratón acaba mostrando dos
     /// filas resaltadas a la vez.
     /// </summary>
-    public abstract class MenuItem : MonoBehaviour, IPointerEnterHandler
+    public abstract class MenuEntry : MonoBehaviour, IPointerEnterHandler
     {
         [Tooltip("Deshabilitado: no responde y se dibuja apagado. Por ejemplo «Continuar» cuando " +
                  "no hay partida guardada.")]
@@ -24,7 +24,7 @@ namespace SilentDivide.UI
         public event System.Action OnActivated;
 
         /// <summary>Avisa al navegador de que el ratón tomó el foco, para mover la selección.</summary>
-        public event System.Action<MenuItem> OnFocusRequested;
+        public event System.Action<MenuEntry> OnFocusRequested;
 
         /// <summary>Cierto mientras esta fila es la seleccionada.</summary>
         protected bool Focused { get; private set; }

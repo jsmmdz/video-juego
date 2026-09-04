@@ -4,7 +4,7 @@ using UnityEngine;
 namespace SilentDivide.UI
 {
     /// <summary>
-    /// Recorrido del foco por una columna de <see cref="MenuItem"/>, y lectura del teclado.
+    /// Recorrido del foco por una columna de <see cref="MenuEntry"/>, y lectura del teclado.
     ///
     /// Es una clase normal, no un componente: el menú principal y la pantalla de Ajustes tienen uno
     /// cada uno, y solo el de la pantalla visible procesa entrada. Así el foco de cada pantalla se
@@ -12,23 +12,23 @@ namespace SilentDivide.UI
     /// </summary>
     public sealed class MenuNavigator
     {
-        private readonly List<MenuItem> items;
+        private readonly List<MenuEntry> items;
         private int focusedIndex = -1;
 
-        public MenuNavigator(IEnumerable<MenuItem> items)
+        public MenuNavigator(IEnumerable<MenuEntry> items)
         {
-            this.items = new List<MenuItem>();
-            foreach (MenuItem item in items)
+            this.items = new List<MenuEntry>();
+            foreach (MenuEntry item in items)
                 if (item != null) this.items.Add(item);
 
-            foreach (MenuItem item in this.items)
+            foreach (MenuEntry item in this.items)
                 item.OnFocusRequested += Focus;
         }
 
         /// <summary>Hay que llamarlo al destruir la pantalla: los eventos son de C#, no de Unity.</summary>
         public void Dispose()
         {
-            foreach (MenuItem item in items)
+            foreach (MenuEntry item in items)
                 if (item != null) item.OnFocusRequested -= Focus;
         }
 
@@ -52,7 +52,7 @@ namespace SilentDivide.UI
 
         // ── Foco ─────────────────────────────────────────────────────────────────────────────
 
-        public void Focus(MenuItem item)
+        public void Focus(MenuEntry item)
         {
             int index = items.IndexOf(item);
             if (index >= 0) SetFocus(index);
@@ -102,7 +102,7 @@ namespace SilentDivide.UI
         /// <summary>Apaga el resaltado sin olvidar cuál era la fila activa.</summary>
         public void ClearHighlight()
         {
-            foreach (MenuItem item in items)
+            foreach (MenuEntry item in items)
                 if (item != null) item.SetFocused(false);
         }
 

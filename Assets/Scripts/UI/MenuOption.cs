@@ -15,7 +15,7 @@ namespace SilentDivide.UI
     /// de las lámparas para el foco. La diferencia es que aquí Enter avanza al valor siguiente,
     /// igual que la flecha derecha: así la fila se puede usar solo con Enter si hace falta.
     /// </summary>
-    public sealed class MenuOption : MenuItem,
+    public sealed class MenuOption : MenuEntry,
         IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
     {
         [SerializeField] private TextMeshProUGUI nameLabel;

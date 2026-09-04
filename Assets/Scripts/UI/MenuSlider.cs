@@ -14,7 +14,7 @@ namespace SilentDivide.UI
     /// aquí no hay que arrastrar un tirador, solo mover el valor con las flechas, y así comparte
     /// exactamente el mismo lenguaje visual que <see cref="MenuOption"/>.
     /// </summary>
-    public sealed class MenuSlider : MenuItem,
+    public sealed class MenuSlider : MenuEntry,
         IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
     {
         [SerializeField] private TextMeshProUGUI nameLabel;

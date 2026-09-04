@@ -184,7 +184,7 @@ Assets/
     │   └── PlaceholderSprites.cs    4 rectángulos de color, sin arte final
     └── UI/
         ├── UITheme.cs             paleta, tomada del mockup de inicio
-        ├── MenuItem.cs            base de todo lo seleccionable
+        ├── MenuEntry.cs           base de todo lo seleccionable
         ├── MenuNavigator.cs       recorrido del foco y lectura del teclado
         ├── MenuButton.cs          opción: rótulo + filete
         ├── MenuOption.cs          fila de Ajustes que recorre valores

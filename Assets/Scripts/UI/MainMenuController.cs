@@ -19,7 +19,7 @@ namespace SilentDivide.UI
     public sealed class MainMenuController : MonoBehaviour
     {
         [Header("Opciones, en orden de navegación")]
-        [SerializeField] private List<MenuItem> items = new List<MenuItem>();
+        [SerializeField] private List<MenuEntry> items = new List<MenuEntry>();
 
         [Header("Referencias")]
         [SerializeField] private MenuButton playButton;

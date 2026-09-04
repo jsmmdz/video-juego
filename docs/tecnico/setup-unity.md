@@ -59,8 +59,18 @@ echo "m_EditorVersion: 6000.6.0f1" > ProjectSettings/ProjectVersion.txt   # pon 
    «Desconocido»: quítalo de la lista (los tres puntos → **Remove project**) y vuelve a añadirlo.
 2. Ábrelo. La primera importación tarda: Unity genera `Library/`, el resto de `ProjectSettings/`
    y `Packages/manifest.json`, y compila los scripts.
-3. Commitea `ProjectSettings/` y `Packages/manifest.json`. Fijan versión de editor y dependencias,
-   y a partir de ahí el resto del equipo clona y abre sin ningún paso previo.
+3. **Unity arrancará en Safe Mode con decenas de errores de compilación.** Es lo esperado la
+   primera vez y no es culpa del código: al generar `Packages/manifest.json` desde cero, Unity
+   escribe un juego de paquetes mínimo que **no incluye Unity UI**, y sin él no existen
+   `VertexHelper`, `IPointerEnterHandler` ni el resto de la interfaz.
+
+   Arréglalo en **Window ▸ Package Manager** → desplegable **Unity Registry** → busca
+   **Unity UI** → **Install**. Ese paquete basta: en Unity 6 `com.unity.ugui` trae TextMeshPro
+   dentro. Unity recompila y sale solo del Safe Mode.
+
+4. Commitea `ProjectSettings/` y `Packages/manifest.json`. Fijan versión de editor y dependencias,
+   y a partir de ahí el resto del equipo clona y abre sin ningún paso previo — incluido el paquete
+   de Unity UI, así que no repetirán el paso 3.
 
 > Si el Hub avisa de que el proyecto se hizo con otra versión, aquí se puede aceptar sin miedo:
 > `Assets/` solo contiene archivos `.cs`, que no tienen formato serializado que migrar.
@@ -102,8 +112,9 @@ Genera la escena de inicio a partir del mockup definitivo del kit de UX-UI: ilus
 completa, velo oscuro en la columna izquierda, logotipo de tres líneas, las opciones «Jugar» y
 «Ajustes», y la pantalla de Ajustes de Sistema oculta detrás.
 
-**Requiere TextMeshPro**, incluido por defecto en Unity 6. Si el proyecto no lo tiene, Unity lo
-ofrece al abrir la escena (`Window ▸ TextMeshPro ▸ Import TMP Essential Resources`).
+**Requiere TextMeshPro**, que en Unity 6 viene dentro de `com.unity.ugui`. Si Unity ofrece
+importar los recursos (`Window ▸ TextMeshPro ▸ Import TMP Essential Resources`), acepta: sin ellos
+no hay fuente por defecto y las etiquetas salen vacías.
 
 ### Arte que hay que colocar antes
 

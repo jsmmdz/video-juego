@@ -68,13 +68,27 @@ namespace SilentDivide.EditorTools
             return scene;
         }
 
+        /// <summary>
+        /// Suelo del blockout, con un damero de 2 × 2 m en tonos de Umbria.
+        ///
+        /// No es decoración: sobre un plano de un solo color no se puede juzgar la velocidad de
+        /// caminata ni si la cámara sigue con retraso, porque no hay nada que se desplace bajo los
+        /// pies. Y con la cuadrícula a escala conocida se mide de un vistazo cuánto avanza el
+        /// personaje por segundo y cuánto cubre un salto.
+        /// </summary>
         private static void BuildGround()
         {
             var ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.name = "Suelo (blockout 100x100)";
             // El plano primitivo de Unity mide 10x10 unidades con escala 1.
             ground.transform.localScale = Vector3.one * (GroundSize / 10f);
+
+            PaintCheckered(ground, "Suelo-Umbria", Hex(0x3B3A36), Hex(0x4A413E),
+                           GroundSize / TileSize);
         }
+
+        /// <summary>Lado de cada casilla del damero del suelo, en metros.</summary>
+        private const float TileSize = 2f;
 
         private static Transform BuildPlayer()
         {
@@ -132,6 +146,34 @@ namespace SilentDivide.EditorTools
             box.isTrigger = true;
 
             zone.AddComponent<SurveillanceZone>();
+
+            MarkOnGround(zone.transform, box, "Zona-vigilada", Hex(0xB08D57));
+        }
+
+        /// <summary>
+        /// Dibuja la huella de un volumen en el suelo.
+        ///
+        /// Los gizmos de las zonas **solo se ven en la vista de escena**. Jugando, la barra de
+        /// sospecha subía y la cámara cambiaba de plano sin que nada en pantalla explicara por qué.
+        /// Esta marca no participa en la lógica: la detección sigue siendo del BoxCollider.
+        /// </summary>
+        private static void MarkOnGround(Transform zone, BoxCollider box, string name, Color color)
+        {
+            var marker = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            marker.name = $"Marca — {name}";
+            marker.transform.SetParent(zone, false);
+
+            // Dos centímetros sobre el suelo: a ras de cero, los dos planos parpadean al competir
+            // por el mismo píxel de profundidad.
+            marker.transform.localPosition = new Vector3(0f, -box.size.y * 0.5f + 0.02f, 0f);
+            // El plano primitivo mide 10 × 10 unidades, de ahí la división.
+            marker.transform.localScale = new Vector3(box.size.x / 10f, 1f, box.size.z / 10f);
+
+            // Sin colisión: es una marca, no un suelo. Con ella, el personaje caminaría dos
+            // centímetros más alto justo al entrar en la zona.
+            Object.DestroyImmediate(marker.GetComponent<Collider>());
+
+            Paint(marker, name, color);
         }
 
         private static void BuildCameraZone()
@@ -148,6 +190,8 @@ namespace SilentDivide.EditorTools
             // Plano más cerrado, como un callejón de Umbria. Mismo ángulo, distinta distancia.
             so.FindProperty("offset").vector3Value = new Vector3(0f, 7f, -6f);
             so.ApplyModifiedPropertiesWithoutUndo();
+
+            MarkOnGround(zone.transform, box, "Zona-de-camara", Hex(0x4A4A7E));
         }
 
         private static void BuildSuspicionUI(Transform player)
@@ -323,6 +367,55 @@ namespace SilentDivide.EditorTools
                 material.color = color;
                 EditorUtility.SetDirty(material);
             }
+
+            renderer.sharedMaterial = material;
+        }
+
+        /// <summary>
+        /// Material de damero de dos colores. La textura son 2 × 2 píxeles repetidos por la
+        /// superficie: una imagen mínima con filtrado por punto da un damero perfecto a cualquier
+        /// tamaño, sin arte y sin peso.
+        /// </summary>
+        private static void PaintCheckered(
+            GameObject target, string materialName, Color a, Color b, float tiles)
+        {
+            var renderer = target.GetComponent<Renderer>();
+            if (renderer == null) return;
+
+            SceneCatalog.EnsureFolder(MaterialsFolder);
+
+            string texturePath  = $"{MaterialsFolder}/{materialName}.asset";
+            string materialPath = $"{MaterialsFolder}/{materialName}.mat";
+
+            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath);
+            if (texture == null)
+            {
+                texture = new Texture2D(2, 2, TextureFormat.RGBA32, false)
+                {
+                    // Por punto y no bilineal: con filtrado suave, dos píxeles estirados por cien
+                    // metros dan un degradado, no un damero.
+                    filterMode = FilterMode.Point,
+                    wrapMode = TextureWrapMode.Repeat,
+                };
+                AssetDatabase.CreateAsset(texture, texturePath);
+            }
+
+            texture.SetPixels(new[] { a, b, b, a });
+            texture.Apply();
+            EditorUtility.SetDirty(texture);
+
+            var material = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
+            if (material == null)
+            {
+                material = new Material(renderer.sharedMaterial.shader);
+                AssetDatabase.CreateAsset(material, materialPath);
+            }
+
+            material.color = Color.white;   // el color lo pone la textura, no el tinte
+            material.mainTexture = texture;
+            // La textura tiene dos casillas por lado, así que media repetición por casilla.
+            material.mainTextureScale = Vector2.one * (tiles * 0.5f);
+            EditorUtility.SetDirty(material);
 
             renderer.sharedMaterial = material;
         }

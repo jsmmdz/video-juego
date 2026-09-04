@@ -99,10 +99,11 @@ Genera una escena con todo montado:
 - Suelo de blockout a escala real (100 × 100 m, según `docs/diseno/escenarios.md`)
 - **Nero**: `CharacterController` + `PlayerMovement` + `SuspicionSystem`, con un billboard hijo
 - **Cámara**: ángulo fijo de 45°, `FollowCamera` apuntando al jugador
-- Una **zona vigilada** (volumen dorado, visible como gizmo)
-- Una **zona de cámara** con plano más cerrado, tipo callejón de Umbria
+- Una **zona vigilada**, con su huella en bronce pintada en el suelo
+- Una **zona de cámara** con plano más cerrado, tipo callejón de Umbria, con huella violeta
+- Una **escalera de bloques** y una plataforma, para probar el salto
 - **Barra de sospecha** en pantalla
-- Ocho cubos de referencia, para tener contra qué juzgar movimiento y cámara
+- Ocho cubos de referencia de colores, para tener contra qué juzgar movimiento y cámara
 
 Se puede volver a ejecutar cuantas veces haga falta: crea una escena nueva cada vez, la guarda en
 `Assets/Scenes/Prototipo.unity` y la registra en Build Settings.
@@ -116,6 +117,8 @@ Pulsa Play y comprueba, módulo por módulo:
 | **Movimiento** | La cápsula camina con `WASD`, gira hacia donde va, y cae sin flotar ni despegarse. Al soltar las teclas conserva la orientación. |
 | **Salto** | Con `Espacio` salta ~1,6 m. Sube la escalera de bloques escalón a escalón y alcanza la plataforma de madera. **No** se puede saltar dos veces en el aire. Ver [01-movimiento.md](01-movimiento.md). |
 | **Referencias** | Los ocho cubos del círculo tienen colores distintos, de las paletas de Umbria y Aurea. Sirven para saber hacia dónde apunta la cámara al girar. |
+| **Suelo** | Damero de 2 × 2 m en tonos de Umbria. Es la regla del escenario: sirve para medir de un vistazo cuánto avanza el personaje por segundo y cuánto cubre un salto. |
+| **Zonas** | Las dos zonas tienen su huella pintada en el suelo: **bronce** la vigilada, **violeta** la de cámara. La barra debe empezar a subir justo al pisar el bronce. |
 | **Cámara** | Sigue con retraso suave, **no tiembla** en movimiento continuo y **no rota nunca**. Al entrar en la zona de cámara, el plano se cierra de golpe (corte seco). |
 | **Vista del personaje** | El rectángulo cambia de color al cruzar cada uno de los seis sectores, y **no parpadea** caminando justo sobre una frontera. La muesca negra del borde se invierte al pasar de un lado al otro. |
 | **Sospecha** | La barra sube dentro del volumen dorado y baja fuera. Satura arriba y abajo. Al llenarse cambia a rojo y **se queda ahí** (el estado queda congelado). |

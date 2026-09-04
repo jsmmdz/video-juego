@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using SilentDivide.UI;
@@ -47,16 +48,31 @@ namespace SilentDivide.EditorTools
         // sea su nombre y su formato: pedir un nombre exacto es una fuente de fallos silenciosos.
         private const string BackdropFolder = "Assets/Art/UI/Menu";
 
-        [MenuItem("The Silent Divide/Construir menú principal")]
+        [MenuItem("The Silent Divide/Construir menú principal", priority = 21)]
         public static void Build()
         {
             if (!EditorUtility.DisplayDialog(
                     "Construir pantalla de inicio",
-                    "Se creará una escena nueva con el menú.\n\n" +
+                    "Se creará una escena nueva con el menú, y se guardará en " +
+                    SceneCatalog.MenuScenePath + ".\n\n" +
                     "Si la escena actual tiene cambios sin guardar, se te pedirá guardarlos.",
                     "Construir", "Cancelar"))
                 return;
 
+            Scene scene = BuildScene();
+            SceneCatalog.SaveAndRegister(scene, SceneCatalog.MenuScenePath);
+
+            Debug.Log("[The Silent Divide] Pantalla de inicio construida y guardada en " +
+                      SceneCatalog.MenuScenePath + ". Flechas o ratón para navegar, Enter para " +
+                      "confirmar, Escape para salir de Ajustes.");
+        }
+
+        /// <summary>
+        /// Monta la escena sin preguntar ni guardarla. Lo usa <see cref="SceneCatalog.BuildAll"/>,
+        /// que encadena las dos escenas y no puede lanzar un diálogo por cada una.
+        /// </summary>
+        internal static Scene BuildScene()
+        {
             var scene = EditorSceneManager.NewScene(
                 NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
 
@@ -94,8 +110,7 @@ namespace SilentDivide.EditorTools
 
             EditorSceneManager.MarkSceneDirty(scene);
 
-            Debug.Log("[The Silent Divide] Pantalla de inicio construida. " +
-                      "Flechas o ratón para navegar, Enter para confirmar, Escape para salir de Ajustes.");
+            return scene;
         }
 
         // ── Armazón ──────────────────────────────────────────────────────────────────────────

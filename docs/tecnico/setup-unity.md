@@ -77,6 +77,19 @@ echo "m_EditorVersion: 6000.6.0f1" > ProjectSettings/ProjectVersion.txt   # pon 
 
 > `Library/`, `*.csproj` y `*.sln` los genera Unity y están en `.gitignore`. No los subas.
 
+## Dejarlo jugable de una vez
+
+Menú **The Silent Divide ▸ Construir todo y dejarlo jugable**.
+
+Es el atajo: construye las dos escenas, las guarda en `Assets/Scenes/` y las registra en Build
+Settings con el inicio de primera. Al terminar deja abierta la pantalla de inicio, lista para
+pulsar Play y recorrerlo entero — menú, «Jugar», y moverse por el escenario.
+
+Los dos comandos de abajo hacen lo mismo por separado, cuando solo se está tocando una de las dos.
+
+> Las escenas **no se versionan** (ver `.gitignore`): las genera el constructor y así no hay
+> conflictos de YAML al trabajar en paralelo. Cada quien las construye una vez en su clon.
+
 ## Construir la escena de prototipo
 
 Menú **The Silent Divide ▸ Construir escena de prototipo**.
@@ -91,7 +104,8 @@ Genera una escena con todo montado:
 - **Barra de sospecha** en pantalla
 - Ocho cubos de referencia, para tener contra qué juzgar movimiento y cámara
 
-Se puede volver a ejecutar cuantas veces haga falta: crea una escena nueva cada vez.
+Se puede volver a ejecutar cuantas veces haga falta: crea una escena nueva cada vez, la guarda en
+`Assets/Scenes/Prototipo.unity` y la registra en Build Settings.
 
 ## Qué verificar
 
@@ -140,12 +154,13 @@ Para la tipografía: `Window ▸ TextMeshPro ▸ Font Asset Creator`, generar el
 | **Composición** | La columna cae donde el mockup: velo en el 27 % izquierdo, título arriba con «SILENT» y «DIVIDE» **desbordando** el velo sobre la ilustración. Prueba a cambiar el aspecto del Game view (16:9, 16:10, 21:9): la ilustración se recorta, **nunca se deforma**, y la columna no se descoloca. |
 | **Estados de la opción** | Reposo: texto hueso, filete gris tenue. Foco: texto blanco, filete **ámbar**. Pulsado: el filete se aclara y **engorda al doble**. |
 | **Foco compartido** | Mover el ratón sobre una opción mueve la selección del teclado a la misma. **Nunca debe haber dos resaltadas a la vez.** |
-| **Jugar** | Carga la escena de juego. Requiere que esté añadida en `File ▸ Build Settings`. |
+| **Jugar** | Carga la escena de juego. Si construiste con «Construir todo», ya está registrada. |
 | **Ajustes** | La columna del menú desaparece y sale la pantalla de Ajustes. La ilustración **no parpadea** al entrar ni al salir: es la misma escena. |
 | **Escape** | Cierra Ajustes y devuelve el foco a la opción donde estaba, no a la primera. |
 
 > «Jugar» avisará por consola si la escena de juego no está en Build Settings, en lugar de fallar
-> en silencio. Es lo primero que hay que mirar si no pasa nada al pulsarlo.
+> en silencio. Es lo primero que hay que mirar si no pasa nada al pulsarlo: se arregla ejecutando
+> **Construir todo y dejarlo jugable**.
 
 ### Qué verificar en Ajustes
 

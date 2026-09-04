@@ -49,3 +49,5 @@ export_presets.cfg
 # Las escenas definitivas SÍ se versionarán; excluirlas entonces de esta regla.
 Assets/Scenes/Prototipo*.unity
 Assets/Scenes/Prototipo*.unity.meta
+Assets/Scenes/Inicio*.unity
+Assets/Scenes/Inicio*.unity.meta

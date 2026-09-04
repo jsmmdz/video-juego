@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using SilentDivide.Player;
 using SilentDivide.Suspicion;
@@ -24,16 +25,31 @@ namespace SilentDivide.EditorTools
         // Escala real según docs/diseno/escenarios.md: los escenarios son de 100 × 100 m.
         private const float GroundSize = 100f;
 
-        [MenuItem("The Silent Divide/Construir escena de prototipo")]
+        [MenuItem("The Silent Divide/Construir escena de prototipo", priority = 20)]
         public static void Build()
         {
             if (!EditorUtility.DisplayDialog(
                     "Construir escena de prototipo",
-                    "Se creará una escena nueva con el blockout y los cuatro módulos.\n\n" +
+                    "Se creará una escena nueva con el blockout y los cuatro módulos, y se " +
+                    "guardará en " + SceneCatalog.GameScenePath + ".\n\n" +
                     "Si la escena actual tiene cambios sin guardar, se te pedirá guardarlos.",
                     "Construir", "Cancelar"))
                 return;
 
+            Scene scene = BuildScene();
+            SceneCatalog.SaveAndRegister(scene, SceneCatalog.GameScenePath);
+
+            Debug.Log("[The Silent Divide] Escena de prototipo construida y guardada en " +
+                      SceneCatalog.GameScenePath + ". Pulsa Play y muévete con WASD: la barra sube " +
+                      "dentro del volumen dorado.");
+        }
+
+        /// <summary>
+        /// Monta la escena sin preguntar ni guardarla. Lo usa <see cref="SceneCatalog.BuildAll"/>,
+        /// que encadena las dos escenas y no puede lanzar un diálogo por cada una.
+        /// </summary>
+        internal static Scene BuildScene()
+        {
             var scene = EditorSceneManager.NewScene(
                 NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
 
@@ -48,8 +64,7 @@ namespace SilentDivide.EditorTools
             EditorSceneManager.MarkSceneDirty(scene);
             Selection.activeTransform = player;
 
-            Debug.Log("[The Silent Divide] Escena de prototipo construida. " +
-                      "Pulsa Play y muévete con WASD: la barra sube dentro del volumen dorado.");
+            return scene;
         }
 
         private static void BuildGround()

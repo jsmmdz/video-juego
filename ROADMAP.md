@@ -33,6 +33,8 @@ Cuatro módulos, en el orden en que se pueden probar de forma aislada.
       *Verificable:* sube dentro, baja fuera, satura en ambos extremos, y `detectado` queda
       congelado al dispararse.
 
+- [x] **Escenas guardadas y registradas en Build Settings** — «Construir todo y dejarlo jugable»
+      monta las dos, las guarda y las encadena, así que el recorrido menú → escenario funciona.
 - [ ] **Abrir en Unity y verificar los cuatro módulos** contra la tabla de
       [setup-unity.md](docs/tecnico/setup-unity.md). ← siguiente paso
 

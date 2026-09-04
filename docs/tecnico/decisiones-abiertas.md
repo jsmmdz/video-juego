@@ -18,7 +18,26 @@ Puesta en marcha: `setup-unity.md`.
 
 ---
 
+## 1b. ✅ Perspectiva de cámara — RESUELTO por el pitch v2
+
+**Decisión: vista cenital oblicua (aérea en ¾), de ángulo fijo.**
+
+El pitch v1 planteaba dos perspectivas —tercera persona y «vista central»— sin decir cuándo se
+usaba cada una. **El pitch v2 lo sustituye por una sola:** «una perspectiva de vista cenital
+oblicua o vista aérea en ¾».
+
+Es exactamente la que ya está implementada en `03-camara.md`: ángulo fijo por zona, la cámara
+sigue la posición del jugador y **nunca rota**. Y valida retroactivamente el módulo 4: un
+personaje plano orientado a cámara solo se sostiene con un ángulo estable — con la tercera
+persona libre de la v1, el billboard no habría funcionado.
+
+**Efecto sobre el código: ninguno.** Confirma la arquitectura existente.
+
+---
+
 ## 2. 🟡 Esquema de control: point-and-click vs. WASD
+
+**Sigue sin resolverse en el pitch v2**, que mantiene ambas páginas sin tocar.
 
 **Contradicción dentro del propio PDF de pitch:**
 
@@ -39,8 +58,10 @@ sigilo en tiempo real (esprintar hace ruido, agacharse reduce visibilidad — ve
 existen en point-and-click).
 
 **Estado:** el prototipo está implementado con **WASD**, que es lo que dicen dos de las tres
-fuentes y lo único que está diagramado. Queda pendiente **corregir la página 6 del pitch**
-para que el documento no se contradiga a sí mismo.
+fuentes y lo único que está diagramado.
+
+**Acción pendiente:** corregir la página 6 en `The_Silent_Divide_v2.docx` — que es el documento
+editable, así que el arreglo es directo — y volver a exportar el PDF.
 
 ---
 
@@ -140,3 +161,89 @@ dinámica, progresión). Los flowcharts describen un prototipo mínimo de cuatro
 
 **Recomendación:** mantener esa separación explícita. El objetivo del prototipo es **validar la
 mecánica central de sospecha**, no representar el pitch. Ver el plan en `../../ROADMAP.md`.
+
+---
+
+## 10. 🟡 «Tercera persona» en los documentos de narrativa
+
+Los dos documentos de narrativa (`Narrativa_larga.pdf` y `Narrativa_estudio.pdf`, sección de
+jugabilidad, puntos 1 y 2) dicen:
+
+> «Videojuego de sigilo y aventura en **tercera persona**. […] El juego será en tercera persona,
+> para que el jugador pueda ver al personaje y observar mejor el entorno.»
+
+**El pitch v2 dice vista cenital oblicua en ¾.** Son cosas distintas.
+
+**Recomendación: manda el pitch v2**, por tres razones: es el documento más reciente, es el que
+usa el equipo como Game Design, y es lo que ya está construido y validado en los flowcharts.
+
+Además, la intención declarada en la narrativa —«ver al personaje y observar mejor el entorno»—
+la cumple igual de bien una vista cenital oblicua; de hecho, mejor para planificar rutas de
+sigilo.
+
+**Acción:** actualizar los puntos 1 y 2 de la sección de jugabilidad en ambos documentos de
+narrativa.
+
+---
+
+## 11. 🟡 Dos modelos de progresión incompatibles
+
+| Fuente | Modelo |
+|---|---|
+| Pitch v2 (pág. 5–6) | **Atributos y puntos**: Tecnología, Mimetismo, Agilidad y Cultura Aurea, con puntos de libre asignación, más perfiles, especialismos y Ramas de Sabotaje |
+| Narrativa (punto 8) | **Conocimiento del entorno**: «el jugador progresará principalmente mediante el conocimiento del entorno […] observar rutinas, descubrir rutas y aprender cómo funcionan los sistemas de seguridad» |
+
+No son variantes del mismo sistema: uno progresa en la **ficha de personaje**, el otro en la
+**cabeza del jugador**.
+
+**Recomendación:** no son excluyentes si se ordenan. La progresión por conocimiento es la
+principal —es lo que hace bueno a un juego de sigilo— y los atributos son el modificador que
+la acompaña. Pero conviene decidirlo explícitamente, porque **cambia qué se implementa primero**:
+el modelo de conocimiento no necesita ficha de personaje ni pantalla de creación, y por tanto
+permite un vertical slice mucho antes.
+
+**Fuera del alcance del prototipo** en cualquier caso. Decidir antes de la fase 3.
+
+---
+
+## 12. 🟢 Error de escritura en la narrativa larga
+
+En la descripción de Elías Varen:
+
+> «ha dedicado años a impedir que cualquiera de ellos consiga llegar al mundo de **abajo**»
+
+Por contexto debe ser **arriba**: Elías impide que la resistencia de Umbría llegue a Aurea.
+
+**Acción:** corregir en `Narrativa_larga.pdf`.
+
+---
+
+## 13. 🟢 El ratón «orienta la cámara»
+
+El pitch v2 mantiene en la página 7:
+
+> «Ratón (Mouse): **Orientación de la cámara**, apuntado de dispositivos y selección de elementos
+> interactivos.»
+
+Pero la misma v2 define una cámara **cenital oblicua de ángulo fijo**, y el flowchart del módulo 3
+establece que la cámara **no rota nunca**. Con esa cámara, el ratón no puede orientarla.
+
+**Recomendación:** redefinir el papel del ratón como **apuntado de dispositivos y selección de
+elementos interactivos**, quitando la orientación de cámara. Es lo coherente con la perspectiva
+elegida y con lo implementado, y encaja con los botones de interacción del kit de UX-UI
+(`[E] INTERACTUAR`, `ABRIR TERMINAL`, `RECOGER`, `HABLAR`).
+
+**Acción:** corregir la línea del ratón en `The_Silent_Divide_v2.docx`, páginas 7 y 8.
+
+---
+
+## 14. 🟡 Estructura por niveles
+
+La narrativa define tres niveles iniciales —**1: Abajo**, **2: La Barrera**, **3: Arriba**— y el
+pitch v2 pasa de hablar de «partida» a hablar de «nivel». El prototipo actual es **un solo
+escenario plano**.
+
+**Recomendación:** mantener el prototipo como está para validar la mecánica de sospecha, y montar
+la estructura por niveles al empezar la fase 3. El nivel 1 (Umbria, sin vigilancia) es el más
+barato de construir y el que enseña los controles, así que es el candidato natural al primer
+nivel jugable de verdad.

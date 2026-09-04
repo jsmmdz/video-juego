@@ -2,6 +2,10 @@
 
 **Flowcharts:** board de Figma, nodos `50:222` (lógica) y `51:254` (rosa de sectores).
 
+> **Depende de la perspectiva fija.** El pitch v2 define «vista cenital oblicua o vista aérea en
+> ¾», y ese ángulo estable es lo que hace viable este módulo: con la tercera persona libre que
+> planteaba la v1, un personaje plano orientado a cámara no se sostendría.
+
 ## Qué resuelve
 
 El personaje **no es un modelo 3D**: es un **plano con un dibujo**. Este módulo hace dos cosas

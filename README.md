@@ -8,6 +8,8 @@ destruir la **Barrera** que separa a ambas sociedades.
 > **Mecánica central:** un sistema de sospecha. Hay zonas vigiladas; si Nero permanece en
 > ellas la sospecha sube, si sale baja, y si llega al máximo lo detectan.
 
+**Perspectiva:** vista cenital oblicua (aérea en ¾), de ángulo fijo.
+
 ## Estado
 
 **Prototipo jugable con primitivas.** Los cuatro módulos están implementados en **Unity + C#**
@@ -31,7 +33,9 @@ Para probarlo: abre el repositorio como proyecto de Unity y usa el menú
 docs/
 ├── contexto/     material original, sin editar
 │   ├── 00-fuentes.md          índice de fuentes y autorías
-│   ├── pitch-pdf.md           transcripción del PDF de pitch
+│   ├── pitch-pdf.md           transcripción del pitch v2 (vigente)
+│   ├── pitch-cambios-v1-v2.md qué cambió entre versiones
+│   ├── narrativa.md           narrativa larga + jugabilidad
 │   ├── figma-board.md         volcado del board de Figma
 │   └── fuentes/               archivos originales
 ├── diseno/       diseño interpretado
@@ -62,16 +66,21 @@ Plan de trabajo: [ROADMAP.md](ROADMAP.md)
 
 ## Fuentes
 
-- Documento de pitch (PDF) — `docs/contexto/fuentes/The_Silent_Divide.pdf`
+- Pitch / Game Design **v2** — `docs/contexto/fuentes/The_Silent_Divide_v2.docx` (editable) y `.pdf`
+- Narrativa larga y de estudio — `docs/contexto/fuentes/Narrativa_*.pdf`
 - Board de Figma — [The Silent Divide](https://www.figma.com/board/Lyg84G1ZWuFOkAsSqYbnkN/The-Silent-Divide)
+
+Índice completo con autorías y relación entre documentos:
+[`docs/contexto/00-fuentes.md`](docs/contexto/00-fuentes.md)
 
 ## Equipo
 
+Sara Perilla · Juliana Sanabria · Valentina Sanabria · Mariana Fuentes · Junior Mejía · Samuel Silva
+
 | Área | Responsable |
 |---|---|
-| Ilustración, mundo, narrativa | Juliana |
+| Ilustración, mundo, narrativa | Juliana Sanabria |
 | Diseño de botones (boceto) | Mariana Fuentes |
-| Desarrollo | — |
 
 Parte del arte conceptual fue generado con IA (Gemini) a partir de sketches propios; el board
 lo marca explícitamente en cada pieza.

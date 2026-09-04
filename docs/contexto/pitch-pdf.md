@@ -1,7 +1,10 @@
-# Transcripción — The Silent Divide (PDF de pitch)
+# Transcripción — The Silent Divide (pitch / Game Design **v2**)
 
-> Transcripción literal del PDF en `fuentes/The_Silent_Divide.pdf`.
-> Las páginas 9-11 son solo imágenes, sin texto.
+> Transcripción literal de `fuentes/The_Silent_Divide_v2.pdf` (y su original editable
+> `The_Silent_Divide_v2.docx`, de contenido idéntico).
+>
+> **Esta es la versión vigente.** La v1 se conserva en `fuentes/The_Silent_Divide_v1.pdf` solo
+> como referencia histórica; los cambios están en `pitch-cambios-v1-v2.md`.
 
 ## Página 1 — Portada
 
@@ -14,13 +17,15 @@ encarna a Nero, un joven de las profundidades de Umbría que busca infiltrarse e
 superior de Aurea para descubrir las mentiras del sistema y destruir la Barrera que divide a
 ambas sociedades.
 
-El juego se desarrolla desde dos perspectivas: tercera persona, donde la cámara acompaña a
-Nero y permite observar su cuerpo y el entorno, y vista central, que ofrece una visión general
-de los escenarios. Esto permite explorar tanto los espacios oscuros y deteriorados de Umbría
-como la arquitectura moderna y controlada de Aurea.
+El juego se desarrolla desde una perspectiva de **vista cenital oblicua o vista aérea en ¾**.
+Esto permite explorar tanto los espacios oscuros y deteriorados de Umbría como la arquitectura
+moderna y controlada de Aurea.
 
-El juego combina exploración, interacción social y sigilo en tiempo real. El jugador podrá
-desplazarse por los escenarios, interactuar con objetos, hackear terminales y mantener
+> Cambio respecto a la v1, que planteaba tercera persona + vista central. Es exactamente la
+> perspectiva que ya está implementada. Ver `pitch-cambios-v1-v2.md` #1.
+
+El juego combina exploración, interacción social y sigilo en tiempo real. En cada nivel el
+jugador podrá desplazarse por los escenarios, interactuar con objetos, hackear terminales y mantener
 conversaciones importantes para avanzar. Durante las misiones, Nero deberá enfrentarse a
 cámaras de vigilancia, escáneres biométricos, patrullas de seguridad y la desconfianza de
 los habitantes, utilizando recursos como credenciales falsificadas, códigos de acceso y llaves
@@ -35,7 +40,7 @@ Aurea cuentan con rutas de patrulla, sensores y situaciones sociales que obligan
 decidir cómo avanzar sin ser descubierto. También existen lugares clave como el Centro de
 Control de la Barrera o la Residencia de Elías Varen.
 
-Finalmente, Nero deberá enfrentarse a los niveles más protegidos de Aurea y a la persecución
+Finalmente, Nero deberá enfrentarse a los lugares más protegidos de Aurea y a la persecución
 de Elías Varen, hasta llegar al núcleo central de la Barrera. Su misión culminará con el
 sabotaje de la Barrera y la revelación pública de la verdad ante ambos mundos.
 
@@ -173,3 +178,8 @@ acción se interrumpe y se activa el estado de **Alerta Local**.
 6. **Resultado**: si logra ocultarse, la alerta desaparece y puede continuar hacia la consola
    central. Si es detectado sin pase biométrico, se activa la alarma de Aurea, se bloquean los
    accesos y deberá reiniciar desde el último punto de control.
+
+
+## Créditos
+
+Sara Perilla, Juliana Sanabria, Valentina Sanabria, Mariana Fuentes, Junior Mejía y Samuel Silva

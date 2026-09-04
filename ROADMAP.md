@@ -8,8 +8,12 @@ El objetivo del prototipo **no es representar el pitch**, sino validar la mecán
 - [x] **Decidir motor y lenguaje** → **Unity + C#**.
 - [x] Subir la estructura de código (`Assets/Scripts/`).
 - [ ] Generar `ProjectSettings/` y `Packages/` abriendo el repo en Unity, y commitearlos.
-- [ ] **Corregir la página 6 del pitch**, que describe point-and-click en lugar de WASD.
-      Ver [decisiones abiertas #2](docs/tecnico/decisiones-abiertas.md).
+- [ ] **Correcciones en `The_Silent_Divide_v2.docx`** (es editable, así que son directas):
+      página 6 describe point-and-click en lugar de WASD (#2), y el ratón «orienta la cámara»
+      cuando la cámara es de ángulo fijo (#13).
+- [ ] **Actualizar los documentos de narrativa**: dicen «tercera persona», el pitch v2 dice
+      vista cenital oblicua (#10). Y corregir «llegar al mundo de abajo» → «arriba» (#12).
+- [ ] **Decidir el modelo de progresión**: atributos y puntos, o conocimiento del entorno (#11).
 
 ## Fase 1 — Prototipo con primitivas
 
@@ -69,6 +73,10 @@ Va en paralelo a las fases de jugabilidad: no depende de ellas.
 - [ ] Rutas de patrulla.
 - [ ] Integración de los sprites finales de Nero (4 dibujos × 2 atuendos).
 - [ ] Tipografías y botones definitivos de la sección UX-UI.
+- [ ] **Estructura por niveles** (narrativa, punto 3): Nivel 1 Umbria → Nivel 2 La Barrera →
+      Nivel 3 Aurea. El nivel 1 es el más barato y el que enseña los controles, así que es el
+      candidato natural al primer nivel jugable de verdad.
+- [ ] Rutinas de personajes no jugables, y sospecha por interacción social.
 
 ## Fuera del alcance del prototipo
 

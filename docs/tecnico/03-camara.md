@@ -2,6 +2,10 @@
 
 **Flowchart:** board de Figma, nodo `50:215`.
 
+> **Confirmado por el pitch v2:** «El juego se desarrolla desde una perspectiva de vista cenital
+> oblicua o vista aérea en ¾». La v1 pedía dos perspectivas —tercera persona y vista central—;
+> la v2 las sustituye por esta única, que es la que este módulo implementa.
+
 ## Diagrama
 
 ```
@@ -62,8 +66,9 @@ global, permite que cada área tenga su propio encuadre — un plano más cerrad
 de Umbria, uno más abierto en la plaza de Aurea — sin que la cámara jamás gire durante el
 juego.
 
-Esto conecta con las dos perspectivas del pitch (tercera persona y vista central): ambas se
-consiguen como **valores distintos del mismo parámetro**, no como dos sistemas de cámara.
+Con el pitch v2 la perspectiva es una sola, así que el desplazamiento por zona ya no sirve para
+alternar entre dos sistemas de cámara: sirve para **variar la distancia y el encuadre dentro de la
+misma perspectiva** — más cerrado en un callejón de Umbria, más abierto en la plaza de Aurea.
 
 ## Parámetros expuestos
 

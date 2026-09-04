@@ -5,10 +5,28 @@ Derivado del PDF de pitch (páginas 5–8). Ver transcripción completa en
 
 ## Género
 
-Aventura, infiltración y **sigilo social** en tiempo real.
+Aventura, infiltración y **sigilo social** en tiempo real. El combate es **secundario**: al ser
+descubierto, el jugador escapa, se esconde, distrae al enemigo o usa el entorno, en lugar de
+enfrentarse.
 
-Perspectivas previstas: tercera persona (la cámara acompaña a Nero) y vista central (visión
-general del escenario).
+**Perspectiva: vista cenital oblicua (aérea en ¾), de ángulo fijo** (pitch v2).
+
+## Estructura de niveles
+
+El juego se divide en niveles que muestran la evolución del jugador.
+
+| Nivel | Escenario | Qué enseña |
+|---|---|---|
+| **1** | Abajo (Umbria) | Controles básicos, exploración, interacción con objetos, obtención de recursos |
+| **2** | La Barrera | Exploración y pequeños puzles para encontrar cómo atravesarla |
+| **3** | Arriba (Aurea) | Comienza la infiltración: recorrer la ciudad sin levantar sospechas |
+
+Los siguientes aumentan la dificultad con más vigilancia, zonas restringidas y situaciones que
+exigen aplicar lo aprendido.
+
+Los dos mundos tienen enfoques distintos: **Umbria** gira en torno a exploración, supervivencia y
+búsqueda de recursos, en espacios reducidos y desordenados; **Aurea** en torno a infiltración y
+sigilo, en espacios amplios y luminosos pero muy vigilados.
 
 ## Menú principal
 
@@ -88,6 +106,19 @@ Entre incursiones a Aurea, Nero vuelve a Umbria para:
 - Acudir al médico del mercado negro para curarse
 - Hablar con informantes de la resistencia (pistas sobre la Barrera)
 - Descansar en el refugio y **guardar** datos robados o recursos que no quiera llevar consigo
+
+## Personajes no jugables
+
+Tendrán **rutinas y comportamientos propios**. El jugador podrá hablar con ellos, observar sus
+movimientos y usar la información obtenida para avanzar. Algunos podrán ayudarlo y **otros podrán
+aumentar el nivel de sospecha** — es decir, la sospecha no viene solo de cámaras y guardias, sino
+también de la interacción social.
+
+## Progresión
+
+⚠️ Hay **dos modelos incompatibles** entre el pitch y la narrativa: por atributos y puntos, o por
+conocimiento del entorno. Sin decidir — ver
+[decisiones abiertas #11](../tecnico/decisiones-abiertas.md).
 
 ## Rejugabilidad y expansión
 

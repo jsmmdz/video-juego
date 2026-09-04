@@ -13,14 +13,23 @@
 Este repositorio contiene la carpeta `Assets/`, no un proyecto de Unity completo:
 `ProjectSettings/`, `Packages/` y `Library/` los genera Unity, y `Library/` no se versiona.
 
-1. Clona el repositorio.
-2. En Unity Hub → **Add** → **Add project from disk** → selecciona la carpeta del repositorio.
-3. Ábrelo. Unity generará `ProjectSettings/` y `Packages/` en el primer arranque e importará
-   `Assets/`.
-4. Commitea `ProjectSettings/` y `Packages/manifest.json` una vez generados: fijan la versión del
-   editor y las dependencias para todo el equipo.
+**Unity Hub no puede abrir el repositorio tal cual.** «Add project from disk» comprueba que exista
+`ProjectSettings/ProjectVersion.txt` y rechaza la carpeta si no está. Así que primero hay que
+fabricar esos archivos, una sola vez y para todo el equipo:
 
-> Alternativa: crear un proyecto nuevo 3D vacío desde el Hub y copiar dentro la carpeta `Assets/`.
+1. Clona el repositorio y sitúate en la rama de trabajo.
+2. En Unity Hub → **New project** → **3D (Built-in Render Pipeline)** → Unity 6 LTS.
+   Créalo **fuera** del repositorio, con cualquier nombre: es desechable.
+3. Cierra Unity cuando termine de crearlo.
+4. Copia `ProjectSettings/` y `Packages/` del proyecto desechable **dentro** de la carpeta del
+   repositorio. Ya puedes borrar el desechable.
+5. Unity Hub → **Add** → **Add project from disk** → ahora sí, la carpeta del repositorio. Ábrelo.
+6. Unity importará `Assets/` y compilará. La primera vez tarda.
+7. Commitea `ProjectSettings/` y `Packages/manifest.json`: fijan la versión del editor y las
+   dependencias, y a partir de ahí el resto del equipo se salta los pasos 2 a 4 y abre el
+   repositorio directamente.
+
+> `Library/`, `*.csproj` y `*.sln` los genera Unity y están en `.gitignore`. No los subas.
 
 ## Construir la escena de prototipo
 

@@ -28,17 +28,18 @@ git clone https://github.com/jsmmdz/video-juego.git
 cd video-juego
 git checkout claude/chat-continuation-oszk43
 
-# Lee la versión de Unity instalada por el Hub y escribe el archivo que le falta.
-$v = (Get-ChildItem "C:\Program Files\Unity\Hub\Editor" -Directory |
-      Sort-Object Name -Descending | Select-Object -First 1).Name
-Write-Host "Versión detectada: $v"
 New-Item -ItemType Directory -Force -Path ProjectSettings | Out-Null
-Set-Content ProjectSettings\ProjectVersion.txt "m_EditorVersion: $v" -Encoding UTF8
+Set-Content ProjectSettings\ProjectVersion.txt "m_EditorVersion: 6000.6.0f1" -Encoding ASCII
+Get-Content ProjectSettings\ProjectVersion.txt
 ```
 
-Si `Versión detectada:` sale vacío, el Hub instaló el editor en otra ruta: búscala en
-**Unity Hub ▸ Installs**, pulsa los tres puntos de la versión → **Show in Explorer**, y sustituye
-la ruta del comando.
+Sustituye `6000.6.0f1` por tu versión, que es el nombre de la carpeta en
+**Unity Hub ▸ Installs** (tres puntos de la versión → **Show in Explorer**).
+
+**`-Encoding ASCII` es obligatorio.** El `-Encoding UTF8` de PowerShell 5 antepone un BOM
+invisible al archivo, Unity no lo parsea y el Hub muestra el proyecto con la versión
+«Desconocido» y un triángulo de aviso, sin decir por qué. La última línea imprime el archivo para
+comprobarlo: tiene que salir exactamente `m_EditorVersion: <tu versión>`.
 
 ### macOS y Linux
 
@@ -48,12 +49,14 @@ cd video-juego
 git checkout claude/chat-continuation-oszk43
 
 mkdir -p ProjectSettings
-echo "m_EditorVersion: 6000.0.58f1" > ProjectSettings/ProjectVersion.txt   # pon tu versión
+echo "m_EditorVersion: 6000.6.0f1" > ProjectSettings/ProjectVersion.txt   # pon tu versión
 ```
 
 ### Después, en las dos
 
 1. Unity Hub → **Add** → **Add project from disk** → la carpeta `video-juego`.
+   Si ya lo habías añadido antes de crear `ProjectVersion.txt`, el Hub lo tiene cacheado como
+   «Desconocido»: quítalo de la lista (los tres puntos → **Remove project**) y vuelve a añadirlo.
 2. Ábrelo. La primera importación tarda: Unity genera `Library/`, el resto de `ProjectSettings/`
    y `Packages/manifest.json`, y compila los scripts.
 3. Commitea `ProjectSettings/` y `Packages/manifest.json`. Fijan versión de editor y dependencias,

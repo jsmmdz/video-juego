@@ -22,6 +22,7 @@ namespace SilentDivide.UI
         [SerializeField] private Image track;
         [SerializeField] private Image fill;
         [SerializeField] private Image rule;
+        [SerializeField] private Image highlight;
         [SerializeField] private Image hitArea;
         [SerializeField, Min(1f)] private float ruleThickness = 1.5f;
 
@@ -64,28 +65,26 @@ namespace SilentDivide.UI
 
         public override void Repaint()
         {
-            Color text, ruleColor, fillColor;
+            float e = FocusEased;
+
+            Color text, fillColor;
+            Color highlightColor = UITheme.RuleHover;
             float thickness = ruleThickness;
 
             if (!interactable)
             {
-                text = UITheme.ButtonDisabled; ruleColor = UITheme.RuleDisabled;
-                fillColor = UITheme.ButtonDisabled;
+                text = UITheme.ButtonDisabled; fillColor = UITheme.ButtonDisabled; e = 0f;
             }
             else if (pressed)
             {
-                text = UITheme.ButtonPressed;  ruleColor = UITheme.RulePressed;
-                fillColor = UITheme.RulePressed; thickness = ruleThickness * 2f;
-            }
-            else if (Focused)
-            {
-                text = UITheme.ButtonHover;    ruleColor = UITheme.RuleHover;
-                fillColor = UITheme.RuleHover;
+                text = UITheme.ButtonPressed; fillColor = UITheme.RulePressed;
+                highlightColor = UITheme.RulePressed; thickness = ruleThickness * 2f; e = 1f;
             }
             else
             {
-                text = UITheme.ButtonIdle;     ruleColor = UITheme.RuleIdle;
-                fillColor = UITheme.RuleIdle;
+                text = Color.Lerp(UITheme.ButtonIdle, UITheme.ButtonHover, e);
+                // El relleno de la barra acompaña al filete: se enciende con el mismo gesto.
+                fillColor = Color.Lerp(UITheme.RuleIdle, UITheme.RuleHover, e);
             }
 
             if (nameLabel  != null) nameLabel.color = text;
@@ -106,12 +105,7 @@ namespace SilentDivide.UI
                 fill.rectTransform.offsetMax = Vector2.zero;
             }
 
-            if (rule != null)
-            {
-                rule.color = ruleColor;
-                Vector2 size = rule.rectTransform.sizeDelta;
-                rule.rectTransform.sizeDelta = new Vector2(size.x, thickness);
-            }
+            PaintRule(rule, highlight, interactable, thickness, highlightColor, e);
 
             if (hitArea != null) hitArea.color = new Color(0f, 0f, 0f, 0f);
         }

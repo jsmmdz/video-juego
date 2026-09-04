@@ -122,11 +122,12 @@ Los dos faltan y la escena se construye igual, avisando por consola:
 
 | Archivo | Dónde va | Si falta |
 |---|---|---|
-| Ilustración del callejón | `Assets/Art/UI/Menu/inicio-fondo.png` | Fondo de color plano |
+| Ilustración del callejón | cualquier imagen en `Assets/Art/UI/Menu/` | Fondo de color plano |
 | `Dune_Rise.ttf` | `Assets/Art/UI/Fonts/` | Título con la fuente por defecto de TMP |
 
-La ilustración hay que importarla como **Sprite (2D and UI)** en el inspector, o
-`AssetDatabase` no la encuentra y el constructor la da por ausente.
+La ilustración basta con soltarla en esa carpeta: da igual el nombre y el formato, y el
+constructor la reimporta solo como **Sprite (2D and UI)** si hace falta. Si hay varias imágenes
+coge la primera, así que deja solo la que quieras de fondo.
 
 Para la tipografía: `Window ▸ TextMeshPro ▸ Font Asset Creator`, generar el *font asset* desde el
 `.ttf`, y asignarlo en `MainMenuSceneBuilder.NewLabel`. Ver

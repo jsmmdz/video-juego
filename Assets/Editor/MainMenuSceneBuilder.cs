@@ -43,8 +43,9 @@ namespace SilentDivide.EditorTools
         private static float ColumnWidth => (ColumnRightFrac - ColumnLeftFrac) * RefWidth;
         private static float ColumnLeft  => ColumnLeftFrac * RefWidth;
 
-        // Ruta de la ilustración de fondo. Si no está, el menú sale sobre color plano y lo avisa.
-        private const string BackdropPath = "Assets/Art/UI/Menu/inicio-fondo.png";
+        // Carpeta de la ilustración de fondo. Se coge la primera imagen que haya dentro, sea cual
+        // sea su nombre y su formato: pedir un nombre exacto es una fuente de fallos silenciosos.
+        private const string BackdropFolder = "Assets/Art/UI/Menu";
 
         [MenuItem("The Silent Divide/Construir menú principal")]
         public static void Build()
@@ -132,23 +133,51 @@ namespace SilentDivide.EditorTools
             Stretch(go.GetComponent<RectTransform>());
             image.raycastTarget = false;
 
-            var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(BackdropPath);
-            if (sprite != null)
-            {
-                image.sprite = sprite;
-                image.color  = Color.white;
-
-                var fitter = go.AddComponent<AspectRatioFitter>();
-                fitter.aspectMode  = AspectRatioFitter.AspectMode.EnvelopeParent;
-                fitter.aspectRatio = sprite.rect.width / sprite.rect.height;
-            }
-            else
+            Sprite sprite = LoadBackdrop();
+            if (sprite == null)
             {
                 image.color = UITheme.Background;
-                Debug.LogWarning($"[The Silent Divide] Falta la ilustración de inicio en " +
-                                 $"'{BackdropPath}'. El menú se construye sobre color plano; " +
-                                 "coloca ahí el PNG y vuelve a construir la escena.");
+                Debug.LogWarning($"[The Silent Divide] No hay ninguna imagen en '{BackdropFolder}'. " +
+                                 "El menú se construye sobre color plano; deja ahí el PNG del " +
+                                 "callejón y vuelve a construir la escena.");
+                return;
             }
+
+            image.sprite = sprite;
+            image.color  = Color.white;
+
+            var fitter = go.AddComponent<AspectRatioFitter>();
+            fitter.aspectMode  = AspectRatioFitter.AspectMode.EnvelopeParent;
+            fitter.aspectRatio = sprite.rect.width / sprite.rect.height;
+        }
+
+        /// <summary>
+        /// Primera imagen de la carpeta de fondo, importada como Sprite.
+        ///
+        /// Unity importa las imágenes como Texture por defecto, y una Texture no se puede asignar a
+        /// un <c>Image</c> de interfaz. Antes eso obligaba a cambiarlo a mano en el inspector y, si
+        /// se olvidaba, el constructor decía que el archivo faltaba aunque estuviera ahí. Ahora se
+        /// corrige el importador y se reimporta.
+        /// </summary>
+        private static Sprite LoadBackdrop()
+        {
+            if (!AssetDatabase.IsValidFolder(BackdropFolder)) return null;
+
+            string[] guids = AssetDatabase.FindAssets("t:Texture2D", new[] { BackdropFolder });
+            if (guids.Length == 0) return null;
+
+            string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+
+            if (AssetImporter.GetAtPath(path) is TextureImporter importer &&
+                importer.textureType != TextureImporterType.Sprite)
+            {
+                importer.textureType = TextureImporterType.Sprite;
+                importer.SaveAndReimport();
+                Debug.Log($"[The Silent Divide] '{path}' se ha reimportado como Sprite para poder " +
+                          "usarlo de fondo.");
+            }
+
+            return AssetDatabase.LoadAssetAtPath<Sprite>(path);
         }
 
         /// <summary>Círculo claro de la esquina superior derecha del mockup. Es decorativo.</summary>
@@ -276,12 +305,13 @@ namespace SilentDivide.EditorTools
             labelRect.sizeDelta = new Vector2(0f, labelHeight);
             labelRect.anchoredPosition = Vector2.zero;
 
-            Image rule = BuildRule(go.transform, ruleHeight);
+            Image rule = BuildRule(go.transform, ruleHeight, out Image highlight);
 
             var button = go.AddComponent<MenuButton>();
             var so = new SerializedObject(button);
             so.FindProperty("label").objectReferenceValue   = label;
-            so.FindProperty("rule").objectReferenceValue    = rule;
+            so.FindProperty("rule").objectReferenceValue      = rule;
+            so.FindProperty("highlight").objectReferenceValue = highlight;
             so.FindProperty("hitArea").objectReferenceValue = hit;
             so.FindProperty("ruleThickness").floatValue     = ruleHeight;
             so.ApplyModifiedPropertiesWithoutUndo();
@@ -290,8 +320,11 @@ namespace SilentDivide.EditorTools
             return button;
         }
 
-        /// <summary>Filete anclado abajo, a todo el ancho de la fila.</summary>
-        private static Image BuildRule(Transform parent, float thickness)
+        /// <summary>
+        /// Filete anclado abajo, a todo el ancho de la fila, más el filete de realce que lo barre
+        /// al ganar el foco. El realce nace con ancho cero, así que en reposo no se ve.
+        /// </summary>
+        private static Image BuildRule(Transform parent, float thickness, out Image highlight)
         {
             GameObject go = NewGraphic(parent, "Filete", out Image rule);
             rule.color = UITheme.RuleIdle;
@@ -303,6 +336,17 @@ namespace SilentDivide.EditorTools
             rect.pivot     = new Vector2(0.5f, 0f);
             rect.sizeDelta = new Vector2(0f, thickness);
             rect.anchoredPosition = Vector2.zero;
+
+            // Hijo del filete: hereda su alto, así engorda con él al pulsar sin más cuentas.
+            GameObject highlightGo = NewGraphic(go.transform, "Filete - realce", out highlight);
+            highlight.color = UITheme.RuleHover;
+            highlight.raycastTarget = false;
+
+            var highlightRect = highlightGo.GetComponent<RectTransform>();
+            highlightRect.anchorMin = new Vector2(0f, 0f);
+            highlightRect.anchorMax = new Vector2(0f, 1f);
+            highlightRect.offsetMin = Vector2.zero;
+            highlightRect.offsetMax = Vector2.zero;
 
             return rule;
         }
@@ -407,7 +451,7 @@ namespace SilentDivide.EditorTools
         /// <summary>Armazón común de las filas de Ajustes: nombre a la izquierda, filete debajo.</summary>
         private static GameObject SettingsRow(
             Transform parent, string name, float width, ref float y,
-            out Image hit, out TextMeshProUGUI nameLabel, out Image rule)
+            out Image hit, out TextMeshProUGUI nameLabel, out Image rule, out Image highlight)
         {
             const float rowHeight = 44f;
 
@@ -431,7 +475,7 @@ namespace SilentDivide.EditorTools
             nameRect.anchorMax = new Vector2(0.5f, 1f);
             nameRect.offsetMin = nameRect.offsetMax = Vector2.zero;
 
-            rule = BuildRule(go.transform, 1.5f);
+            rule = BuildRule(go.transform, 1.5f, out highlight);
 
             y -= rowHeight + 10f;
             return go;
@@ -452,7 +496,7 @@ namespace SilentDivide.EditorTools
             Transform parent, float width, ref float y, List<MenuEntry> collected)
         {
             GameObject go = SettingsRow(parent, "Fila - Opción", width, ref y,
-                                        out Image hit, out TextMeshProUGUI nameLabel, out Image rule);
+                                        out Image hit, out TextMeshProUGUI nameLabel, out Image rule, out Image highlight);
             TextMeshProUGUI value = ValueLabel(go.transform);
 
             var option = go.AddComponent<MenuOption>();
@@ -460,6 +504,7 @@ namespace SilentDivide.EditorTools
             so.FindProperty("nameLabel").objectReferenceValue  = nameLabel;
             so.FindProperty("valueLabel").objectReferenceValue = value;
             so.FindProperty("rule").objectReferenceValue       = rule;
+            so.FindProperty("highlight").objectReferenceValue  = highlight;
             so.FindProperty("hitArea").objectReferenceValue    = hit;
             so.ApplyModifiedPropertiesWithoutUndo();
 
@@ -471,7 +516,7 @@ namespace SilentDivide.EditorTools
             Transform parent, float width, ref float y, List<MenuEntry> collected)
         {
             GameObject go = SettingsRow(parent, "Fila - Barra", width, ref y,
-                                        out Image hit, out TextMeshProUGUI nameLabel, out Image rule);
+                                        out Image hit, out TextMeshProUGUI nameLabel, out Image rule, out Image highlight);
 
             // Canal y relleno ocupan el tercio central; el porcentaje va pegado a la derecha.
             GameObject trackGo = NewGraphic(go.transform, "Canal", out Image track);
@@ -503,6 +548,7 @@ namespace SilentDivide.EditorTools
             so.FindProperty("track").objectReferenceValue      = track;
             so.FindProperty("fill").objectReferenceValue       = fill;
             so.FindProperty("rule").objectReferenceValue       = rule;
+            so.FindProperty("highlight").objectReferenceValue  = highlight;
             so.FindProperty("hitArea").objectReferenceValue    = hit;
             so.ApplyModifiedPropertiesWithoutUndo();
 
@@ -514,7 +560,7 @@ namespace SilentDivide.EditorTools
             Transform parent, string name, string value, float width, ref float y)
         {
             GameObject go = SettingsRow(parent, $"Fila - {name}", width, ref y,
-                                        out Image hit, out TextMeshProUGUI nameLabel, out Image rule);
+                                        out Image hit, out TextMeshProUGUI nameLabel, out Image rule, out Image _);
 
             hit.raycastTarget = false;   // no es seleccionable, no debe robar el foco al ratón
             nameLabel.text  = name;
@@ -554,12 +600,13 @@ namespace SilentDivide.EditorTools
             labelRect.sizeDelta = new Vector2(0f, labelHeight);
             labelRect.anchoredPosition = Vector2.zero;
 
-            Image rule = BuildRule(go.transform, ruleHeight);
+            Image rule = BuildRule(go.transform, ruleHeight, out Image highlight);
 
             var button = go.AddComponent<MenuButton>();
             var so = new SerializedObject(button);
             so.FindProperty("label").objectReferenceValue   = label;
-            so.FindProperty("rule").objectReferenceValue    = rule;
+            so.FindProperty("rule").objectReferenceValue      = rule;
+            so.FindProperty("highlight").objectReferenceValue = highlight;
             so.FindProperty("hitArea").objectReferenceValue = hit;
             so.FindProperty("ruleThickness").floatValue     = ruleHeight;
             so.ApplyModifiedPropertiesWithoutUndo();

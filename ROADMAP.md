@@ -62,8 +62,10 @@ Va en paralelo a las fases de jugabilidad: no depende de ellas.
       Se guardan en `PlayerPrefs` y se aplican al arrancar.
 - [ ] **Tipografía Dune Rise**: falta el archivo `.ttf` para generar el *font asset* de TMP
       ([decisiones abiertas #8](docs/tecnico/decisiones-abiertas.md)). ← siguiente paso de interfaz
-- [ ] **Ilustración de fondo**: colocar el PNG del callejón de Umbria en
-      `Assets/Art/UI/Menu/inicio-fondo.png`. Sin él la pantalla se construye sobre color plano.
+- [ ] **Ilustración de fondo**: soltar el PNG del callejón de Umbria en `Assets/Art/UI/Menu/`.
+      El constructor coge la primera imagen de la carpeta y la reimporta como Sprite sola.
+- [x] **Animación de foco**: el filete ámbar barre el gris y el rótulo se desplaza al enfocarse,
+      con la misma curva en botones, selectores y barras.
 - [ ] Decidir dónde van «Nueva Partida» y «Continuar»
       ([decisiones abiertas #15](docs/tecnico/decisiones-abiertas.md)).
 - [ ] **Barra de sospecha con los cuatro estados del kit**: normal, sospecha, alerta y alarma.

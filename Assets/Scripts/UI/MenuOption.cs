@@ -21,6 +21,7 @@ namespace SilentDivide.UI
         [SerializeField] private TextMeshProUGUI nameLabel;
         [SerializeField] private TextMeshProUGUI valueLabel;
         [SerializeField] private Image rule;
+        [SerializeField] private Image highlight;
         [SerializeField] private Image hitArea;
         [SerializeField, Min(1f)] private float ruleThickness = 1.5f;
 
@@ -68,14 +69,16 @@ namespace SilentDivide.UI
 
         public override void Repaint()
         {
-            Color text, ruleColor;
+            float e = FocusEased;
+
+            Color text;
+            Color highlightColor = UITheme.RuleHover;
             float thickness = ruleThickness;
 
-            if (!interactable)      { text = UITheme.ButtonDisabled; ruleColor = UITheme.RuleDisabled; }
-            else if (pressed)       { text = UITheme.ButtonPressed;  ruleColor = UITheme.RulePressed;
-                                      thickness = ruleThickness * 2f; }
-            else if (Focused)       { text = UITheme.ButtonHover;    ruleColor = UITheme.RuleHover; }
-            else                    { text = UITheme.ButtonIdle;     ruleColor = UITheme.RuleIdle; }
+            if (!interactable)   { text = UITheme.ButtonDisabled; e = 0f; }
+            else if (pressed)    { text = UITheme.ButtonPressed; highlightColor = UITheme.RulePressed;
+                                   thickness = ruleThickness * 2f; e = 1f; }
+            else                 { text = Color.Lerp(UITheme.ButtonIdle, UITheme.ButtonHover, e); }
 
             if (nameLabel != null) nameLabel.color = text;
 
@@ -87,12 +90,7 @@ namespace SilentDivide.UI
                 valueLabel.color = text;
             }
 
-            if (rule != null)
-            {
-                rule.color = ruleColor;
-                Vector2 size = rule.rectTransform.sizeDelta;
-                rule.rectTransform.sizeDelta = new Vector2(size.x, thickness);
-            }
+            PaintRule(rule, highlight, interactable, thickness, highlightColor, e);
 
             if (hitArea != null) hitArea.color = new Color(0f, 0f, 0f, 0f);
         }

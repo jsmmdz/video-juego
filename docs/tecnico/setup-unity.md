@@ -49,37 +49,70 @@ Pulsa Play y comprueba, módulo por módulo:
 | **Vista del personaje** | El rectángulo cambia de color al cruzar cada uno de los seis sectores, y **no parpadea** caminando justo sobre una frontera. La muesca negra del borde se invierte al pasar de un lado al otro. |
 | **Sospecha** | La barra sube dentro del volumen dorado y baja fuera. Satura arriba y abajo. Al llenarse cambia a rojo y **se queda ahí** (el estado queda congelado). |
 
-## Construir el menú principal
+## Construir la pantalla de inicio
 
 Menú **The Silent Divide ▸ Construir menú principal**.
 
-Genera la escena del menú a partir del kit de UX-UI del board: fondo, título, los cuatro botones
-(Nueva Partida, Continuar, Ajustes, Salir) y la ayuda de navegación.
+Genera la escena de inicio a partir del mockup definitivo del kit de UX-UI: ilustración a pantalla
+completa, velo oscuro en la columna izquierda, logotipo de tres líneas, las opciones «Jugar» y
+«Ajustes», y la pantalla de Ajustes de Sistema oculta detrás.
 
 **Requiere TextMeshPro**, incluido por defecto en Unity 6. Si el proyecto no lo tiene, Unity lo
 ofrece al abrir la escena (`Window ▸ TextMeshPro ▸ Import TMP Essential Resources`).
+
+### Arte que hay que colocar antes
+
+Los dos faltan y la escena se construye igual, avisando por consola:
+
+| Archivo | Dónde va | Si falta |
+|---|---|---|
+| Ilustración del callejón | `Assets/Art/UI/Menu/inicio-fondo.png` | Fondo de color plano |
+| `Dune_Rise.ttf` | `Assets/Art/UI/Fonts/` | Título con la fuente por defecto de TMP |
+
+La ilustración hay que importarla como **Sprite (2D and UI)** en el inspector, o
+`AssetDatabase` no la encuentra y el constructor la da por ausente.
+
+Para la tipografía: `Window ▸ TextMeshPro ▸ Font Asset Creator`, generar el *font asset* desde el
+`.ttf`, y asignarlo en `MainMenuSceneBuilder.NewLabel`. Ver
+[decisiones abiertas #8](decisiones-abiertas.md).
 
 ### Qué verificar
 
 | Elemento | Qué debe pasar |
 |---|---|
-| **Estados del botón** | Reposo: contorno claro. Foco: contorno y texto en violeta. Pulsado: relleno violeta con borde claro. |
-| **Foco compartido** | Mover el ratón sobre un botón mueve la selección del teclado al mismo botón. **Nunca debe haber dos resaltados a la vez.** |
-| **Continuar** | Aparece **deshabilitado** (gris apagado) porque no hay partida guardada. Las flechas lo saltan al navegar. |
-| **Forma del botón** | Las esquinas cortadas en diagonal tienen el contorno del **mismo grosor** que los lados rectos. |
-| **Nueva Partida** | Carga la escena de juego. Requiere que esté añadida en `File ▸ Build Settings`. |
+| **Composición** | La columna cae donde el mockup: velo en el 27 % izquierdo, título arriba con «SILENT» y «DIVIDE» **desbordando** el velo sobre la ilustración. Prueba a cambiar el aspecto del Game view (16:9, 16:10, 21:9): la ilustración se recorta, **nunca se deforma**, y la columna no se descoloca. |
+| **Estados de la opción** | Reposo: texto hueso, filete gris tenue. Foco: texto blanco, filete **ámbar**. Pulsado: el filete se aclara y **engorda al doble**. |
+| **Foco compartido** | Mover el ratón sobre una opción mueve la selección del teclado a la misma. **Nunca debe haber dos resaltadas a la vez.** |
+| **Jugar** | Carga la escena de juego. Requiere que esté añadida en `File ▸ Build Settings`. |
+| **Ajustes** | La columna del menú desaparece y sale la pantalla de Ajustes. La ilustración **no parpadea** al entrar ni al salir: es la misma escena. |
+| **Escape** | Cierra Ajustes y devuelve el foco a la opción donde estaba, no a la primera. |
 
-> El botón «Nueva Partida» avisará por consola si la escena no está en Build Settings, en lugar de
-> fallar en silencio. Es lo primero que hay que mirar si no pasa nada al pulsarlo.
+> «Jugar» avisará por consola si la escena de juego no está en Build Settings, en lugar de fallar
+> en silencio. Es lo primero que hay que mirar si no pasa nada al pulsarlo.
+
+### Qué verificar en Ajustes
+
+| Elemento | Qué debe pasar |
+|---|---|
+| **Cabe entera** | Se ve «Volver» sin desplazar la vista. Es lo más justo de la pantalla: la última fila termina a 1044 px de los 1080 de referencia. |
+| **Tamaño del texto** | Ponlo en «Muy grande» y vuelve a mirar lo anterior: es donde puede desbordar. |
+| **Encabezados** | Las flechas **saltan** GRÁFICOS, AUDIO, CONTROLES y ACCESIBILIDAD, y las tres filas de controles, que son de solo lectura. |
+| **Barras** | Flecha izquierda y derecha mueven de 5 en 5 y **saturan** en 0 % y 100 %, sin dar la vuelta. Clic sobre el canal salta al punto pulsado; clic fuera del canal no mueve nada. |
+| **Selectores** | Enter y clic en la mitad derecha avanzan; clic en la mitad izquierda retrocede. **Dan la vuelta** en los extremos, al revés que las barras. |
+| **Persistencia** | Cambia volumen y calidad, sal del Play mode, vuelve a entrar: los valores siguen puestos. Se guardan en `PlayerPrefs`. |
+| **Pantalla completa** | En el editor no hace nada visible; es normal. Se comprueba en una build. |
+
+> Música y efectos se guardan pero **todavía no suenan**: no hay `AudioMixer` en el proyecto.
+> Solo el volumen general llega al motor.
 
 ## Estructura del código
 
 ```
 Assets/
+├── Art/UI/                        arte de interfaz (falta: ver tabla de arriba)
 ├── Editor/
-│   └── PrototypeSceneBuilder.cs   monta la escena de prueba
-├── Editor/
-│   └── MainMenuSceneBuilder.cs    monta la escena del menú
+│   ├── PrototypeSceneBuilder.cs   monta la escena de prueba
+│   └── MainMenuSceneBuilder.cs    monta la pantalla de inicio y la de Ajustes
 └── Scripts/
     ├── ExecutionOrder.cs          prioridades de LateUpdate (cámara → billboard)
     ├── Player/
@@ -94,10 +127,17 @@ Assets/
     │   ├── DirectionalBillboard.cs  módulo 4
     │   └── PlaceholderSprites.cs    4 rectángulos de color, sin arte final
     └── UI/
-        ├── UITheme.cs             paleta compartida entre menú y HUD
-        ├── ChamferedPanel.cs      forma de botón con esquinas cortadas
-        ├── MenuButton.cs          estados: reposo, foco, pulsado, deshabilitado
-        ├── MainMenuController.cs  navegación y acciones del menú
+        ├── UITheme.cs             paleta, tomada del mockup de inicio
+        ├── MenuItem.cs            base de todo lo seleccionable
+        ├── MenuNavigator.cs       recorrido del foco y lectura del teclado
+        ├── MenuButton.cs          opción: rótulo + filete
+        ├── MenuOption.cs          fila de Ajustes que recorre valores
+        ├── MenuSlider.cs          fila de Ajustes con valor continuo
+        ├── MainMenuController.cs  pantalla de inicio
+        ├── SettingsPanel.cs       Ajustes de Sistema
+        ├── GameSettings.cs        persistencia en PlayerPrefs
+        ├── TextScaler.cs          tamaño de texto de accesibilidad
+        ├── ChamferedPanel.cs      forma con esquinas cortadas (para el HUD)
         └── SuspicionBar.cs        barra de sospecha
 ```
 

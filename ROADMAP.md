@@ -47,6 +47,21 @@ tiempo, y ser detectado si no se sale.
       Ver [decisiones abiertas #3](docs/tecnico/decisiones-abiertas.md).
 - [ ] Salto y blockout vertical de Umbria.
 
+## Interfaz
+
+Va en paralelo a las fases de jugabilidad: no depende de ellas.
+
+- [x] **Menú principal** — botones con los cuatro estados del kit, navegación por teclado y ratón
+      con foco compartido, «Continuar» deshabilitado sin partida guardada.
+- [ ] Tipografías reales, en cuanto diseño entregue las familias y licencias
+      ([decisiones abiertas #8](docs/tecnico/decisiones-abiertas.md)).
+- [ ] Fondo del menú con la ilustración de la brecha entre mundos.
+- [ ] **Barra de sospecha con los cuatro estados del kit**: normal, sospecha, alerta y alarma.
+      Encaja con el estado intermedio de Alerta Local de la fase 2.
+- [ ] Overlay «ALERTA — DETECCIÓN LOCAL» en pantalla.
+- [ ] Botones de interacción del mundo (`[E] INTERACTUAR`, `ABRIR TERMINAL`, `RECOGER`, `HABLAR`).
+- [ ] Pantalla de Ajustes de Sistema: gráficos, audio, controles, accesibilidad.
+
 ## Fase 3 — Sustituir simplificaciones
 
 - [ ] Conos de visión de guardias y alcance de cámaras, reemplazando los volúmenes de zona

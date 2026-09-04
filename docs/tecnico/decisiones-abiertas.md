@@ -120,8 +120,15 @@ La sección *Design UX-UI* del board define dos familias tipográficas (una para
 botones, otra para interfaz/diálogos/descripciones) y un set de botones, pero los nombres
 concretos no están volcados en texto.
 
-**Acción:** pedir a diseño los nombres de las tipografías y las licencias, y volcar los tokens de
-UI a `docs/diseno/`.
+**Bloquea ahora:** el menú principal ya está implementado y usa la **fuente por defecto de
+TextMeshPro** como marcador de posición. El kit del board usa un espaciado entre letras muy
+marcado, que sí está reproducido (`characterSpacing`), pero la familia tipográfica no.
+
+**Acción:** pedir a diseño los nombres de las dos tipografías y sus licencias, generar los
+*font assets* de TMP y asignarlos en `MainMenuSceneBuilder.NewLabel`. Es un cambio de una línea
+por familia.
+
+Los colores del kit sí están volcados, en `Assets/Scripts/UI/UITheme.cs`.
 
 ---
 

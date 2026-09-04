@@ -1,111 +1,92 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using TMPro;
 
 namespace SilentDivide.UI
 {
     /// <summary>
-    /// Botón del menú, con los cuatro estados del kit de UX-UI: reposo, foco, pulsado y
-    /// deshabilitado.
+    /// Opción del menú de inicio: un rótulo con un filete corto debajo, como en el mockup
+    /// definitivo. No lleva caja ni relleno — el fondo es la ilustración y encerrar el texto en un
+    /// recuadro la taparía.
     ///
-    /// El foco es uno solo y lo comparten ratón y teclado: apuntar con el ratón mueve la selección,
-    /// igual que hacerlo con las flechas. Sin eso, un menú de teclado y ratón acaba mostrando dos
-    /// botones resaltados a la vez.
+    /// Los cuatro estados del kit se resuelven con dos cosas: el color del texto y el filete. En
+    /// reposo el filete es gris tenue; con el foco se enciende en el ámbar de las lámparas y el
+    /// texto sube a blanco; al pulsar, el filete además engorda. Deshabilitado apaga los dos.
+    ///
+    /// La navegación y el foco compartido entre ratón y teclado están en <see cref="MenuItem"/>.
     /// </summary>
-    [RequireComponent(typeof(ChamferedPanel))]
-    public sealed class MenuButton : MonoBehaviour,
-        IPointerEnterHandler, IPointerExitHandler,
-        IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
+    public sealed class MenuButton : MenuItem,
+        IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
     {
         [SerializeField] private TextMeshProUGUI label;
-        [SerializeField] private ChamferedPanel panel;
 
-        [Tooltip("Deshabilitado: no responde y se dibuja apagado. Por ejemplo «Continuar» cuando " +
-                 "no hay partida guardada.")]
-        [SerializeField] private bool interactable = true;
+        [Tooltip("Filete bajo el rótulo. Es lo que marca el estado.")]
+        [SerializeField] private Image rule;
 
-        /// <summary>Se dispara al activarlo, con ratón o con teclado.</summary>
-        public event System.Action OnActivated;
+        [Tooltip("Gráfico transparente que recibe los eventos de ratón en toda la fila.")]
+        [SerializeField] private Image hitArea;
 
-        /// <summary>Avisa al controlador de que el ratón tomó el foco, para mover la selección.</summary>
-        public event System.Action<MenuButton> OnFocusRequested;
+        [Tooltip("Grosor del filete en reposo. Al pulsar se multiplica por 2.")]
+        [SerializeField, Min(1f)] private float ruleThickness = 1.5f;
 
-        private bool focused;
         private bool pressed;
-
-        public bool Interactable
-        {
-            get => interactable;
-            set { interactable = value; if (!value) { focused = pressed = false; } Repaint(); }
-        }
 
         private void Awake()
         {
-            if (panel == null) panel = GetComponent<ChamferedPanel>();
             if (label == null) label = GetComponentInChildren<TextMeshProUGUI>();
         }
 
-        private void OnEnable() => Repaint();
-
-        /// <summary>Lo llama el controlador cuando este botón pasa a ser el seleccionado.</summary>
-        public void SetFocused(bool value)
+        /// <summary>Texto visible. Lo usa «Volver» y cualquier opción que cambie de rótulo.</summary>
+        public string Text
         {
-            if (!interactable) return;
-            focused = value;
-            if (!value) pressed = false;
-            Repaint();
+            get => label != null ? label.text : string.Empty;
+            set { if (label != null) label.text = value; }
         }
 
-        /// <summary>Activación por teclado. El controlador la usa con Enter o Espacio.</summary>
-        public void Activate()
-        {
-            if (!interactable) return;
-            OnActivated?.Invoke();
-        }
+        protected override void OnFocusLost() => pressed = false;
 
-        private void Repaint()
+        public override void Repaint()
         {
-            if (panel == null) return;
-
-            Color border, fill, text;
+            Color text, ruleColor;
+            float thickness = ruleThickness;
 
             if (!interactable)
             {
-                border = UITheme.ButtonDisabled;
-                fill   = Color.clear;
-                text   = UITheme.ButtonDisabled;
+                text      = UITheme.ButtonDisabled;
+                ruleColor = UITheme.RuleDisabled;
             }
             else if (pressed)
             {
-                border = UITheme.ButtonPressed;
-                fill   = UITheme.ButtonPressedFill;
-                text   = UITheme.TextPrimary;
+                text      = UITheme.ButtonPressed;
+                ruleColor = UITheme.RulePressed;
+                thickness = ruleThickness * 2f;
             }
-            else if (focused)
+            else if (Focused)
             {
-                border = UITheme.ButtonHover;
-                fill   = Color.clear;
-                text   = UITheme.ButtonHover;
+                text      = UITheme.ButtonHover;
+                ruleColor = UITheme.RuleHover;
             }
             else
             {
-                border = UITheme.ButtonIdle;
-                fill   = Color.clear;
-                text   = UITheme.TextPrimary;
+                text      = UITheme.ButtonIdle;
+                ruleColor = UITheme.RuleIdle;
             }
 
-            panel.BorderColor = border;
-            panel.color = fill;
             if (label != null) label.color = text;
+
+            if (rule != null)
+            {
+                rule.color = ruleColor;
+                Vector2 size = rule.rectTransform.sizeDelta;
+                rule.rectTransform.sizeDelta = new Vector2(size.x, thickness);
+            }
+
+            // Invisible, pero tiene que seguir recibiendo el ratón.
+            if (hitArea != null) hitArea.color = new Color(0f, 0f, 0f, 0f);
         }
 
         // ── Ratón ────────────────────────────────────────────────────────────────────────────
-
-        public void OnPointerEnter(PointerEventData e)
-        {
-            if (!interactable) return;
-            OnFocusRequested?.Invoke(this);   // el controlador mueve aquí la selección
-        }
 
         public void OnPointerExit(PointerEventData e)
         {
@@ -131,7 +112,7 @@ namespace SilentDivide.UI
         public void OnPointerClick(PointerEventData e)
         {
             if (!interactable) return;
-            OnActivated?.Invoke();
+            RaiseActivated();
         }
     }
 }

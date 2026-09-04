@@ -21,10 +21,12 @@ y se pueden probar sin ningún arte final.
 | Sistema de sospecha | ✅ | ✅ | ⬜ |
 | Cámara seguidora | ✅ | ✅ | ⬜ |
 | Vista del personaje (billboard) | ✅ | ✅ | ⬜ |
-| Menú principal | ✅ | ✅ | ⬜ |
+| Pantalla de inicio | ✅ | ✅ | ⬜ |
+| Ajustes de Sistema | ✅ | ✅ | ⬜ |
 
 Para probarlo: abre el repositorio como proyecto de Unity y usa el menú
-**The Silent Divide ▸ Construir escena de prototipo**. Guía completa en
+**The Silent Divide ▸ Construir escena de prototipo**, o
+**▸ Construir menú principal** para la pantalla de inicio. Guía completa en
 [setup-unity.md](docs/tecnico/setup-unity.md).
 
 ## Documentación

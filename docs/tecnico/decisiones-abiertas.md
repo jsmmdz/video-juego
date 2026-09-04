@@ -135,21 +135,24 @@ con identificadores en código y nombres de archivo). Actualizar los stickies de
 
 ---
 
-## 8. 🟢 Tipografías y tokens de UI
+## 8. 🟡 Tipografías: falta el archivo de Dune Rise
 
-La sección *Design UX-UI* del board define dos familias tipográficas (una para títulos y
-botones, otra para interfaz/diálogos/descripciones) y un set de botones, pero los nombres
-concretos no están volcados en texto.
+La familia de **títulos y botones** ya tiene nombre: **Dune Rise** (`Dune_Rise.ttf`), confirmada
+por diseño con su muestrario de mayúsculas y minúsculas. Es una geométrica de caja ancha y trazo
+monolineal, y es la que forma el logotipo de tres líneas del mockup de inicio.
 
-**Bloquea ahora:** el menú principal ya está implementado y usa la **fuente por defecto de
-TextMeshPro** como marcador de posición. El kit del board usa un espaciado entre letras muy
-marcado, que sí está reproducido (`characterSpacing`), pero la familia tipográfica no.
+**Bloquea ahora:** el nombre no es el archivo. La pantalla de inicio está implementada y sigue
+usando la **fuente por defecto de TextMeshPro**, así que el título no se ve como el mockup. El
+espaciado entre letras del kit sí está reproducido (`characterSpacing`).
 
-**Acción:** pedir a diseño los nombres de las dos tipografías y sus licencias, generar los
-*font assets* de TMP y asignarlos en `MainMenuSceneBuilder.NewLabel`. Es un cambio de una línea
-por familia.
+**Acción:** poner `Dune_Rise.ttf` en `Assets/Art/UI/Fonts/`, generar el *font asset* de TMP
+(Window ▸ TextMeshPro ▸ Font Asset Creator) y asignarlo en `MainMenuSceneBuilder.NewLabel`. Es un
+cambio de una línea.
 
-Los colores del kit sí están volcados, en `Assets/Scripts/UI/UITheme.cs`.
+**Sigue pendiente:** la segunda familia, la de interfaz, diálogos y descripciones. Y la licencia
+de las dos, que no se ha visto.
+
+Los colores sí están volcados, en `Assets/Scripts/UI/UITheme.cs`, tomados del mockup definitivo.
 
 ---
 
@@ -247,3 +250,42 @@ escenario plano**.
 la estructura por niveles al empezar la fase 3. El nivel 1 (Umbria, sin vigilancia) es el más
 barato de construir y el que enseña los controles, así que es el candidato natural al primer
 nivel jugable de verdad.
+
+---
+
+## 15. 🟡 Qué opciones lleva la pantalla de inicio
+
+El mockup definitivo de la pantalla de inicio muestra **dos** opciones: «Jugar» y «Ajustes». El
+pitch v2 (pág. 5) describe **tres**: «Nueva Partida», «Continuar» y «Ajustes de Sistema» —y el
+muestrario de Dune Rise compone precisamente esas tres.
+
+No son compatibles tal cual: «Jugar» no dice si empieza de cero o retoma.
+
+**Bloquea ahora:** poco. La pantalla está construida con lo que muestra el mockup, que es la
+fuente más reciente y la única que fija la composición. La detección de partida guardada está
+escrita (`MainMenuController.HasSavedGame`) y sin usar, esperando la decisión.
+
+**Recomendación:** que «Jugar» abra un segundo nivel de menú con «Nueva Partida» y «Continuar»,
+en la misma columna y con el mismo filete. Mantiene la pantalla de inicio tan limpia como el
+mockup —que es lo que la ilustración pide— sin perder ninguna opción del pitch, y le da sitio a
+la elección de Origen del Perfil y Especialismo que el pitch intercala al empezar partida.
+
+**Acción:** confirmarlo con diseño antes de montarlo.
+
+---
+
+## 16. 🟢 Estados de foco de la interfaz de inicio
+
+El mockup de la pantalla de inicio es una imagen fija: muestra las opciones **en reposo** y nada
+más. Los otros tres estados del kit —foco, pulsado y deshabilitado— no están dibujados para este
+diseño.
+
+**Bloquea ahora:** nada, pero lo implementado es una interpretación, no una transcripción. En
+reposo el filete bajo el rótulo es gris tenue; al enfocar, el texto sube a blanco y el filete se
+enciende en el **ámbar de las lámparas de la ilustración**; al pulsar, ese ámbar se aclara y el
+filete engorda; deshabilitado apaga los dos.
+
+**Por qué el ámbar:** es el único color cálido del cuadro y ya está en la escena, así que el foco
+se lee sin meter un color nuevo que compita con la ilustración.
+
+**Acción:** enseñárselo a diseño en movimiento y ajustar. Está todo en `UITheme`, en un sitio.

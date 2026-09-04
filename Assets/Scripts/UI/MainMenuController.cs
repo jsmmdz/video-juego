@@ -5,22 +5,29 @@ using UnityEngine.SceneManagement;
 namespace SilentDivide.UI
 {
     /// <summary>
-    /// Menú principal. Las opciones vienen del pitch (PDF pág. 5): Nueva Partida, Continuar y
-    /// Ajustes de Sistema; el kit de UX-UI añade Salir.
+    /// Pantalla de inicio. El mockup definitivo del kit de UX-UI muestra dos opciones —«Jugar» y
+    /// «Ajustes»— sobre la ilustración del callejón de Umbria.
     ///
-    /// «Continuar» solo está disponible si hay partida guardada — por eso el kit define un estado
-    /// deshabilitado.
+    /// El pitch (pág. 5) nombra además «Nueva Partida» y «Continuar». Están **pendientes de
+    /// decidir**: el mockup no las coloca, y no se inventa aquí dónde van. Mientras tanto «Jugar»
+    /// entra al escenario, y la detección de partida guardada ya está escrita para cuando esas dos
+    /// opciones tengan sitio.
+    ///
+    /// Coordina las dos pantallas de la escena: solo la visible procesa entrada, para que las
+    /// flechas no muevan dos focos a la vez.
     /// </summary>
     public sealed class MainMenuController : MonoBehaviour
     {
-        [Header("Botones, en orden de navegación")]
-        [SerializeField] private List<MenuButton> buttons = new List<MenuButton>();
+        [Header("Opciones, en orden de navegación")]
+        [SerializeField] private List<MenuItem> items = new List<MenuItem>();
 
         [Header("Referencias")]
-        [SerializeField] private MenuButton newGameButton;
-        [SerializeField] private MenuButton continueButton;
+        [SerializeField] private MenuButton playButton;
         [SerializeField] private MenuButton settingsButton;
-        [SerializeField] private MenuButton quitButton;
+
+        [Header("Pantallas")]
+        [SerializeField] private GameObject rootScreen;
+        [SerializeField] private SettingsPanel settingsPanel;
 
         [Header("Escenas")]
         [Tooltip("Escena a cargar al empezar. Debe estar en Build Settings.")]
@@ -29,128 +36,49 @@ namespace SilentDivide.UI
         /// <summary>Clave provisional de guardado, hasta que exista el sistema real.</summary>
         private const string SaveKey = "SilentDivide.HasSave";
 
-        private int focusedIndex = -1;
+        private MenuNavigator navigator;
 
         private void Start()
         {
-            foreach (MenuButton button in buttons)
-            {
-                if (button == null) continue;
-                button.OnFocusRequested += Focus;
-            }
+            // Antes de dibujar nada: la primera pantalla ya sale con lo que el jugador dejó puesto.
+            GameSettings.Apply();
 
-            if (newGameButton  != null) newGameButton.OnActivated  += StartNewGame;
-            if (continueButton != null) continueButton.OnActivated += ContinueGame;
+            navigator = new MenuNavigator(items);
+
+            if (playButton     != null) playButton.OnActivated     += Play;
             if (settingsButton != null) settingsButton.OnActivated += OpenSettings;
-            if (quitButton     != null) quitButton.OnActivated     += Quit;
+            if (settingsPanel  != null) settingsPanel.OnClosed     += ReturnFromSettings;
 
-            if (continueButton != null)
-                continueButton.Interactable = HasSavedGame();
-
-            FocusFirstAvailable();
+            navigator.FocusFirstAvailable();
         }
 
         private void OnDestroy()
         {
-            foreach (MenuButton button in buttons)
-            {
-                if (button == null) continue;
-                button.OnFocusRequested -= Focus;
-            }
+            navigator?.Dispose();
 
-            if (newGameButton  != null) newGameButton.OnActivated  -= StartNewGame;
-            if (continueButton != null) continueButton.OnActivated -= ContinueGame;
+            if (playButton     != null) playButton.OnActivated     -= Play;
             if (settingsButton != null) settingsButton.OnActivated -= OpenSettings;
-            if (quitButton     != null) quitButton.OnActivated     -= Quit;
+            if (settingsPanel  != null) settingsPanel.OnClosed     -= ReturnFromSettings;
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
-                Step(1);
-            else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
-                Step(-1);
-            else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)
-                     || Input.GetKeyDown(KeyCode.Space))
-                ActivateFocused();
-        }
+            // Con Ajustes abierto la entrada es suya: este menú queda visible detrás pero inerte.
+            if (settingsPanel != null && settingsPanel.gameObject.activeSelf) return;
 
-        // ── Navegación ───────────────────────────────────────────────────────────────────────
-
-        private void Focus(MenuButton button)
-        {
-            int index = buttons.IndexOf(button);
-            if (index >= 0) SetFocus(index);
-        }
-
-        private void SetFocus(int index)
-        {
-            for (int i = 0; i < buttons.Count; i++)
-                if (buttons[i] != null)
-                    buttons[i].SetFocused(i == index);
-
-            focusedIndex = index;
-        }
-
-        /// <summary>
-        /// Avanza saltando los botones deshabilitados. Recorre como mucho una vuelta completa, para
-        /// no colgarse si ninguno es seleccionable.
-        /// </summary>
-        private void Step(int direction)
-        {
-            if (buttons.Count == 0) return;
-
-            int index = focusedIndex;
-            for (int i = 0; i < buttons.Count; i++)
-            {
-                index = (index + direction + buttons.Count) % buttons.Count;
-                if (buttons[index] != null && buttons[index].Interactable)
-                {
-                    SetFocus(index);
-                    return;
-                }
-            }
-        }
-
-        private void FocusFirstAvailable()
-        {
-            for (int i = 0; i < buttons.Count; i++)
-            {
-                if (buttons[i] != null && buttons[i].Interactable)
-                {
-                    SetFocus(i);
-                    return;
-                }
-            }
-        }
-
-        private void ActivateFocused()
-        {
-            if (focusedIndex < 0 || focusedIndex >= buttons.Count) return;
-            if (buttons[focusedIndex] != null) buttons[focusedIndex].Activate();
+            navigator.HandleInput();
         }
 
         // ── Acciones ─────────────────────────────────────────────────────────────────────────
 
-        private static bool HasSavedGame() => PlayerPrefs.GetInt(SaveKey, 0) == 1;
+        /// <summary>Cierto si hay partida guardada. Lo usará «Continuar» cuando exista.</summary>
+        public static bool HasSavedGame() => PlayerPrefs.GetInt(SaveKey, 0) == 1;
 
-        private void StartNewGame()
+        private void Play()
         {
             // Al iniciar partida nueva el pitch intercala la elección de Origen del Perfil y
             // Especialismo de Infiltración. Están fuera del alcance del prototipo, así que por ahora
             // se entra directo al escenario.
-            LoadGameplay();
-        }
-
-        private void ContinueGame()
-        {
-            // Retomará el último punto guardado con el inventario intacto. Mientras no exista el
-            // sistema de guardado, carga la misma escena.
-            LoadGameplay();
-        }
-
-        private void LoadGameplay()
-        {
             if (string.IsNullOrEmpty(gameplayScene))
             {
                 Debug.LogError("[Menú] No hay escena de juego configurada.");
@@ -169,17 +97,23 @@ namespace SilentDivide.UI
 
         private void OpenSettings()
         {
-            // Gráficos, audio, controles y accesibilidad (PDF pág. 5). Pendiente de implementar.
-            Debug.Log("[Menú] Ajustes de Sistema: pendiente.");
+            if (settingsPanel == null)
+            {
+                Debug.LogWarning("[Menú] No hay panel de Ajustes conectado.");
+                return;
+            }
+
+            // Se oculta la columna del menú, no el canvas entero: la ilustración de fondo
+            // permanece montada, así que entrar en Ajustes no la recarga ni parpadea.
+            navigator.ClearHighlight();
+            if (rootScreen != null) rootScreen.SetActive(false);
+            settingsPanel.Open();
         }
 
-        private void Quit()
+        private void ReturnFromSettings()
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
+            if (rootScreen != null) rootScreen.SetActive(true);
+            navigator.RestoreHighlight();
         }
     }
 }

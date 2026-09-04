@@ -19,6 +19,12 @@ documento gana y el código es el bug — salvo que el documento esté marcado c
 | Cámara seguidora | `docs/tecnico/03-camara.md` | `Assets/Scripts/CameraSystem/FollowCamera.cs` |
 | Vista del personaje | `docs/tecnico/04-vista-personaje.md` | `Assets/Scripts/Rendering/DirectionalBillboard.cs` |
 
+La **interfaz** no viene de un flowchart sino del kit de UX-UI y del mockup de la pantalla de
+inicio. Su fuente de verdad es esa imagen: si el código y el mockup discrepan, manda el mockup.
+Las medidas están en `MainMenuSceneBuilder` como fracciones de pantalla, y los colores en
+`UITheme`. Lo que el mockup no muestra —estados de foco, opciones del pitch que no aparecen— está
+en `decisiones-abiertas.md` (#8, #15, #16), no resuelto por iniciativa propia.
+
 Contexto general: `docs/tecnico/00-arquitectura.md` (orden de ejecución),
 `docs/tecnico/decisiones-abiertas.md` (lo que aún no está decidido).
 
@@ -64,6 +70,6 @@ por comprobar en el editor, y deja instrucciones concretas de qué mirar en Play
 ## Alcance
 
 Lo que está **fuera** del prototipo: creación de personaje, inventario, diálogos, mercado negro,
-generación dinámica de patrullas, progresión, guardado, menú principal. Está documentado en
+generación dinámica de patrullas, progresión y guardado. Está documentado en
 `docs/diseno/sistemas-de-juego.md` para cuando llegue su momento — no lo implementes por
 iniciativa propia.

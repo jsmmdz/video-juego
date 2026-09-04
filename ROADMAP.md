@@ -55,16 +55,21 @@ tiempo, y ser detectado si no se sale.
 
 Va en paralelo a las fases de jugabilidad: no depende de ellas.
 
-- [x] **Menú principal** — botones con los cuatro estados del kit, navegación por teclado y ratón
-      con foco compartido, «Continuar» deshabilitado sin partida guardada.
-- [ ] Tipografías reales, en cuanto diseño entregue las familias y licencias
-      ([decisiones abiertas #8](docs/tecnico/decisiones-abiertas.md)).
-- [ ] Fondo del menú con la ilustración de la brecha entre mundos.
+- [x] **Pantalla de inicio** — maquetada sobre el mockup definitivo: velo oscuro a la izquierda,
+      logotipo de tres líneas que desborda sobre la ilustración, y opciones como rótulo con filete.
+      Navegación por teclado y ratón con foco compartido.
+- [x] **Ajustes de Sistema** — gráficos, audio, controles y accesibilidad, en la misma escena.
+      Se guardan en `PlayerPrefs` y se aplican al arrancar.
+- [ ] **Tipografía Dune Rise**: falta el archivo `.ttf` para generar el *font asset* de TMP
+      ([decisiones abiertas #8](docs/tecnico/decisiones-abiertas.md)). ← siguiente paso de interfaz
+- [ ] **Ilustración de fondo**: colocar el PNG del callejón de Umbria en
+      `Assets/Art/UI/Menu/inicio-fondo.png`. Sin él la pantalla se construye sobre color plano.
+- [ ] Decidir dónde van «Nueva Partida» y «Continuar»
+      ([decisiones abiertas #15](docs/tecnico/decisiones-abiertas.md)).
 - [ ] **Barra de sospecha con los cuatro estados del kit**: normal, sospecha, alerta y alarma.
       Encaja con el estado intermedio de Alerta Local de la fase 2.
 - [ ] Overlay «ALERTA — DETECCIÓN LOCAL» en pantalla.
 - [ ] Botones de interacción del mundo (`[E] INTERACTUAR`, `ABRIR TERMINAL`, `RECOGER`, `HABLAR`).
-- [ ] Pantalla de Ajustes de Sistema: gráficos, audio, controles, accesibilidad.
 
 ## Fase 3 — Sustituir simplificaciones
 
@@ -81,7 +86,7 @@ Va en paralelo a las fases de jugabilidad: no depende de ellas.
 ## Fuera del alcance del prototipo
 
 Creación de personaje (perfiles, especialismos, atributos, ramas de sabotaje), inventario,
-diálogos, mercado negro, generación dinámica de patrullas, progresión, guardado, cinemática de
-introducción y menú principal. Todo está documentado en
+diálogos, mercado negro, generación dinámica de patrullas, progresión, guardado y cinemática de
+introducción. Todo está documentado en
 [`docs/diseno/sistemas-de-juego.md`](docs/diseno/sistemas-de-juego.md) para cuando llegue su
 momento.

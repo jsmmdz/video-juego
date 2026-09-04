@@ -111,3 +111,49 @@ al diagrama antes de implementarse, porque esprintar y agacharse tienen que alim
 módulo de sospecha (ruido / visibilidad) y eso cambia el contrato entre módulos.
 
 Ver `decisiones-abiertas.md`.
+
+---
+
+## Extensión: salto
+
+**No está en el flowchart.** Lo pide el roadmap para la verticalidad de Umbria
+([decisiones abiertas #6](decisiones-abiertas.md)), y se añade sin alterar la estructura del
+diagrama: el salto **solo cambia el valor de la velocidad vertical**, no introduce una segunda
+llamada de movimiento ni una rama nueva.
+
+### Dónde encaja
+
+Va **después** de la decisión «¿tocando el piso?», no dentro de ella. El orden importa: la rama
+del piso asigna `groundedPull` cada fotograma apoyado, así que un impulso aplicado antes quedaría
+machacado en ese mismo fotograma y el salto no saldría nunca.
+
+```
+¿tocando el piso?  →  velocidad = empuje al suelo   |  velocidad += gravedad · Δt
+                              ↓
+¿salta?            →  velocidad = velocidad de salto
+                              ↓
+        avance + velocidad vertical  →  una sola llamada de movimiento
+```
+
+### Parámetros
+
+| Campo | Valor | Por qué |
+|---|---|---|
+| `jumpHeight` | 1,6 m | Se expone la **altura**, no la velocidad. La velocidad inicial se deduce con `v = √(2·g·h)`, así que retocar la gravedad no estropea la altura pactada. |
+| `coyoteTime` | 0,12 s | Margen tras dejar el suelo en el que aún se admite el salto. Sin él, saltar justo al pisar el borde de una plataforma se pierde, y se lee como que el juego no responde. |
+
+Al saltar, el margen se consume (`timeSinceGrounded` se pone fuera de rango). Sin eso, un mismo
+apoyo daría un segundo salto en el aire mientras durase el margen.
+
+### Invariantes que se mantienen
+
+1. **Una única llamada de movimiento por fotograma.** El salto escribe en la misma variable que la
+   caída; la suma y el `Move` no cambian.
+2. **El empuje al suelo no es cero.** Se sigue asignando en cada fotograma apoyado.
+
+### Qué verificar
+
+- La cápsula salta con **Espacio** y sube unos 1,6 m.
+- **No** se puede saltar en el aire: una segunda pulsación no hace nada hasta volver a apoyar.
+- Saltando justo al salir del borde de un escalón, el salto **sí** sale (margen de 0,12 s).
+- Al caer sobre un escalón, la cápsula se queda apoyada y no rebota.

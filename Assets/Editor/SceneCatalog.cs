@@ -51,11 +51,17 @@ namespace SilentDivide.EditorTools
         }
 
         /// <summary>Crea <c>Assets/Scenes</c> si no existe. Unity no la trae en un proyecto vacío.</summary>
-        public static void EnsureScenesFolder()
-        {
-            if (AssetDatabase.IsValidFolder(ScenesFolder)) return;
+        public static void EnsureScenesFolder() => EnsureFolder(ScenesFolder);
 
-            Directory.CreateDirectory(ScenesFolder);
+        /// <summary>
+        /// Crea una carpeta del proyecto si falta, con las intermedias que haga falta. Los
+        /// constructores generan assets en carpetas que un clon recién bajado no tiene.
+        /// </summary>
+        public static void EnsureFolder(string path)
+        {
+            if (AssetDatabase.IsValidFolder(path)) return;
+
+            Directory.CreateDirectory(path);
             AssetDatabase.Refresh();
         }
 

@@ -114,6 +114,8 @@ Pulsa Play y comprueba, módulo por módulo:
 | Módulo | Qué debe pasar |
 |---|---|
 | **Movimiento** | La cápsula camina con `WASD`, gira hacia donde va, y cae sin flotar ni despegarse. Al soltar las teclas conserva la orientación. |
+| **Salto** | Con `Espacio` salta ~1,6 m. Sube la escalera de bloques escalón a escalón y alcanza la plataforma de madera. **No** se puede saltar dos veces en el aire. Ver [01-movimiento.md](01-movimiento.md). |
+| **Referencias** | Los ocho cubos del círculo tienen colores distintos, de las paletas de Umbria y Aurea. Sirven para saber hacia dónde apunta la cámara al girar. |
 | **Cámara** | Sigue con retraso suave, **no tiembla** en movimiento continuo y **no rota nunca**. Al entrar en la zona de cámara, el plano se cierra de golpe (corte seco). |
 | **Vista del personaje** | El rectángulo cambia de color al cruzar cada uno de los seis sectores, y **no parpadea** caminando justo sobre una frontera. La muesca negra del borde se invierte al pasar de un lado al otro. |
 | **Sospecha** | La barra sube dentro del volumen dorado y baja fuera. Satura arriba y abajo. Al llenarse cambia a rojo y **se queda ahí** (el estado queda congelado). |

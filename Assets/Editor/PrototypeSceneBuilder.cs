@@ -60,6 +60,7 @@ namespace SilentDivide.EditorTools
             BuildCameraZone();
             BuildSuspicionUI(player);
             BuildLandmarks();
+            BuildPlatforms();
 
             EditorSceneManager.MarkSceneDirty(scene);
             Selection.activeTransform = player;
@@ -203,20 +204,132 @@ namespace SilentDivide.EditorTools
         }
 
         /// <summary>Cubos de referencia, para tener contra qué juzgar el movimiento y la cámara.</summary>
+        /// <summary>
+        /// Ocho cubos en círculo alrededor del punto de salida. No son decoración: sin nada contra
+        /// lo que comparar, ni el movimiento ni la cámara se pueden juzgar —un plano vacío se ve
+        /// igual moviéndose que quieto—.
+        ///
+        /// Cada uno lleva **su propio color**, de las paletas de `docs/diseno/paletas.md`. Con los
+        /// ocho grises era imposible saber hacia dónde miraba la cámara al girar; con colores, cada
+        /// dirección tiene una referencia reconocible de un vistazo.
+        ///
+        /// El recorrido va de los grises de Umbria a los cálidos de Aurea, así que el círculo
+        /// también sirve de muestrario de las dos paletas.
+        /// </summary>
         private static void BuildLandmarks()
         {
             var parent = new GameObject("Referencias").transform;
 
-            for (int i = 0; i < 8; i++)
+            (string name, Color color)[] palette =
             {
-                float angle = i * Mathf.PI * 2f / 8f;
+                ("Umbria - Negro",     Hex(0x1D1918)),
+                ("Umbria - Sombra",    Hex(0x3B3A36)),
+                ("Umbria - Madera",    Hex(0xB2A392)),
+                ("Umbria - Gris",      Hex(0x83838D)),
+                ("Umbria - Neblina",   Hex(0xC4CBD8)),
+                ("Aurea - Verde agua", Hex(0x83D1C4)),
+                ("Aurea - Cielo",      Hex(0x50C6EB)),
+                ("Aurea - Sol",        Hex(0xF6D061)),
+            };
+
+            for (int i = 0; i < palette.Length; i++)
+            {
+                float angle = i * Mathf.PI * 2f / palette.Length;
                 var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                cube.name = $"Referencia {i}";
+                cube.name = $"Referencia {i} — {palette[i].name}";
                 cube.transform.SetParent(parent, false);
                 cube.transform.position =
                     new Vector3(Mathf.Cos(angle) * 20f, 1.5f, Mathf.Sin(angle) * 20f);
                 cube.transform.localScale = new Vector3(2f, 3f, 2f);
+
+                Paint(cube, palette[i].name, palette[i].color);
             }
         }
+
+        /// <summary>
+        /// Escalera de bloques y una plataforma alta, para poder probar el salto.
+        ///
+        /// Cada escalón sube 0,8 m, la mitad de la altura de salto por defecto. Está medido así a
+        /// propósito: con un margen de 2× se sube la escalera entera sin pelearse con el borde, que
+        /// es lo que hay que poder enseñar. Si alguien baja `jumpHeight` por debajo de 0,8 la
+        /// escalera deja de subirse, y eso es justo la señal de que el salto se quedó corto.
+        /// </summary>
+        private static void BuildPlatforms()
+        {
+            var parent = new GameObject("Plataformas").transform;
+
+            const float step = 0.8f;
+            Color stone = Hex(0x5A6065);
+            Color wood  = Hex(0x514435);
+
+            for (int i = 0; i < 4; i++)
+            {
+                var block = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                block.name = $"Escalón {i + 1}";
+                block.transform.SetParent(parent, false);
+
+                float height = step * (i + 1);
+                // Cada escalón nace en el suelo y crece hacia arriba: así el bloque se apoya en
+                // vez de flotar, y la cara superior queda justo a la altura del escalón.
+                block.transform.position = new Vector3(8f + i * 3f, height * 0.5f, -6f);
+                block.transform.localScale = new Vector3(2.5f, height, 2.5f);
+
+                Paint(block, "Piedra", stone);
+            }
+
+            var platform = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            platform.name = "Plataforma alta";
+            platform.transform.SetParent(parent, false);
+            platform.transform.position = new Vector3(22f, 1.9f, -6f);
+            platform.transform.localScale = new Vector3(6f, 3.8f, 6f);
+
+            Paint(platform, "Madera", wood);
+        }
+
+        // ── Materiales ───────────────────────────────────────────────────────────────────────
+
+        private const string MaterialsFolder = "Assets/Art/Materials";
+
+        /// <summary>
+        /// Aplica un material de color plano, guardándolo como asset y reutilizándolo entre
+        /// objetos y entre reconstrucciones.
+        ///
+        /// Los materiales tienen que ser assets y no objetos sueltos: un material creado en
+        /// memoria y asignado a un objeto de escena se pierde al recargar, y los cubos aparecen en
+        /// magenta la siguiente vez que se abre la escena.
+        /// </summary>
+        private static void Paint(GameObject target, string materialName, Color color)
+        {
+            var renderer = target.GetComponent<Renderer>();
+            if (renderer == null) return;
+
+            SceneCatalog.EnsureFolder(MaterialsFolder);
+
+            string safeName = materialName.Replace(" - ", "-").Replace(" ", "-");
+            string path = $"{MaterialsFolder}/{safeName}.mat";
+
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                // El shader se toma del material por defecto de la primitiva en vez de buscarlo
+                // por nombre: «Standard» solo existe en Built-in, y el proyecto puede migrar a URP
+                // sin que esto tenga que enterarse.
+                material = new Material(renderer.sharedMaterial.shader);
+                material.color = color;
+                AssetDatabase.CreateAsset(material, path);
+            }
+            else
+            {
+                material.color = color;
+                EditorUtility.SetDirty(material);
+            }
+
+            renderer.sharedMaterial = material;
+        }
+
+        private static Color Hex(int rgb) => new Color(
+            ((rgb >> 16) & 0xFF) / 255f,
+            ((rgb >> 8)  & 0xFF) / 255f,
+            ( rgb        & 0xFF) / 255f);
     }
 }

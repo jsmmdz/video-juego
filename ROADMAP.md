@@ -51,7 +51,10 @@ tiempo, y ser detectado si no se sale.
 - [ ] Estado intermedio de **Alerta Local** (el guardia investiga; aún reversible).
 - [ ] Verbos de sigilo: agacharse y esprintar, con su efecto sobre la sospecha.
       Ver [decisiones abiertas #3](docs/tecnico/decisiones-abiertas.md).
-- [ ] Salto y blockout vertical de Umbria.
+- [x] **Salto** — altura de 1,6 m derivada de la gravedad, con margen de 0,12 s tras dejar el
+      suelo. Escalera de bloques en la escena de prototipo para probarlo.
+- [ ] Blockout vertical de Umbria, ahora que el módulo 1 ya tiene salto
+      ([decisiones abiertas #6](docs/tecnico/decisiones-abiertas.md)).
 
 ## Interfaz
 

@@ -43,3 +43,9 @@ sysinfo.txt
 .godot/
 .import/
 export_presets.cfg
+
+# Escenas de prototipo: las genera PrototypeSceneBuilder desde el menú del proyecto.
+# No versionarlas elimina la peor fuente de conflictos al trabajar con agentes en paralelo.
+# Las escenas definitivas SÍ se versionarán; excluirlas entonces de esta regla.
+Assets/Scenes/Prototipo*.unity
+Assets/Scenes/Prototipo*.unity.meta

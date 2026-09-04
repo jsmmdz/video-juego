@@ -35,6 +35,10 @@ Cuatro módulos, en el orden en que se pueden probar de forma aislada.
 **Hito:** el bucle completo funciona. Se puede entrar a una zona, ver subir la barra, salir a
 tiempo, y ser detectado si no se sale.
 
+> A partir de aquí las tareas se pueden repartir entre agentes. Los carriles que pueden ir en
+> paralelo y el que debe ir en solitario están en
+> [flujo-antigravity.md](docs/tecnico/flujo-antigravity.md).
+
 ## Fase 2 — Ajuste de la mecánica central
 
 - [ ] Playtesting de `TASA_SUBIDA` / `TASA_BAJADA` — es el valor que define el juego.

@@ -40,6 +40,7 @@ docs/
 │   └── sistemas-de-juego.md   perfiles, atributos, inventario, detección
 └── tecnico/      especificación de programación
     ├── setup-unity.md         cómo abrir y probar el proyecto
+    ├── flujo-antigravity.md   trabajo con agentes
     ├── 00-arquitectura.md     orden de ejecución dentro del fotograma
     ├── 01-movimiento.md       ┐
     ├── 02-sospecha.md         │ un documento por flowchart,
@@ -48,6 +49,10 @@ docs/
     ├── decisiones-abiertas.md contradicciones y decisiones pendientes
     └── convenciones.md        nomenclatura, código, git
 ```
+
+El repositorio está preparado para trabajar con agentes: `AGENTS.md` y `.agents/rules/` cargan el
+contexto y los invariantes del proyecto. El flujo está en
+[flujo-antigravity.md](docs/tecnico/flujo-antigravity.md).
 
 El código vive en `Assets/Scripts/`, un archivo por módulo del flowchart. Cada script cita en su
 cabecera el nodo de Figma y el documento que implementa.

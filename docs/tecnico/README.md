@@ -21,6 +21,7 @@ llegan los assets.
 | Otros | |
 |---|---|
 | `setup-unity.md` | Cómo abrir el proyecto y verificar los módulos |
+| `flujo-antigravity.md` | Cómo trabajar con agentes de Antigravity en este repo |
 | `decisiones-abiertas.md` | Contradicciones y decisiones pendientes de confirmar |
 | `convenciones.md` | Nomenclatura, ramas, commits |
 

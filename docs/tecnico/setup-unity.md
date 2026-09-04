@@ -14,20 +14,53 @@ Este repositorio contiene la carpeta `Assets/`, no un proyecto de Unity completo
 `ProjectSettings/`, `Packages/` y `Library/` los genera Unity, y `Library/` no se versiona.
 
 **Unity Hub no puede abrir el repositorio tal cual.** «Add project from disk» comprueba que exista
-`ProjectSettings/ProjectVersion.txt` y rechaza la carpeta si no está. Así que primero hay que
-fabricar esos archivos, una sola vez y para todo el equipo:
+`ProjectSettings/ProjectVersion.txt` y rechaza la carpeta si no está.
 
-1. Clona el repositorio y sitúate en la rama de trabajo.
-2. En Unity Hub → **New project** → **3D (Built-in Render Pipeline)** → Unity 6 LTS.
-   Créalo **fuera** del repositorio, con cualquier nombre: es desechable.
-3. Cierra Unity cuando termine de crearlo.
-4. Copia `ProjectSettings/` y `Packages/` del proyecto desechable **dentro** de la carpeta del
-   repositorio. Ya puedes borrar el desechable.
-5. Unity Hub → **Add** → **Add project from disk** → ahora sí, la carpeta del repositorio. Ábrelo.
-6. Unity importará `Assets/` y compilará. La primera vez tarda.
-7. Commitea `ProjectSettings/` y `Packages/manifest.json`: fijan la versión del editor y las
-   dependencias, y a partir de ahí el resto del equipo se salta los pasos 2 a 4 y abre el
-   repositorio directamente.
+Ese archivo tiene **una sola línea** con la versión del editor. Basta con crearlo: Unity genera el
+resto de `ProjectSettings/` y un `Packages/manifest.json` por defecto en el primer arranque. No
+hace falta un proyecto desechable del que copiar nada.
+
+### Windows (PowerShell)
+
+```powershell
+cd $HOME\Documents
+git clone https://github.com/jsmmdz/video-juego.git
+cd video-juego
+git checkout claude/chat-continuation-oszk43
+
+# Lee la versión de Unity instalada por el Hub y escribe el archivo que le falta.
+$v = (Get-ChildItem "C:\Program Files\Unity\Hub\Editor" -Directory |
+      Sort-Object Name -Descending | Select-Object -First 1).Name
+Write-Host "Versión detectada: $v"
+New-Item -ItemType Directory -Force -Path ProjectSettings | Out-Null
+Set-Content ProjectSettings\ProjectVersion.txt "m_EditorVersion: $v" -Encoding UTF8
+```
+
+Si `Versión detectada:` sale vacío, el Hub instaló el editor en otra ruta: búscala en
+**Unity Hub ▸ Installs**, pulsa los tres puntos de la versión → **Show in Explorer**, y sustituye
+la ruta del comando.
+
+### macOS y Linux
+
+```bash
+git clone https://github.com/jsmmdz/video-juego.git
+cd video-juego
+git checkout claude/chat-continuation-oszk43
+
+mkdir -p ProjectSettings
+echo "m_EditorVersion: 6000.0.58f1" > ProjectSettings/ProjectVersion.txt   # pon tu versión
+```
+
+### Después, en las dos
+
+1. Unity Hub → **Add** → **Add project from disk** → la carpeta `video-juego`.
+2. Ábrelo. La primera importación tarda: Unity genera `Library/`, el resto de `ProjectSettings/`
+   y `Packages/manifest.json`, y compila los scripts.
+3. Commitea `ProjectSettings/` y `Packages/manifest.json`. Fijan versión de editor y dependencias,
+   y a partir de ahí el resto del equipo clona y abre sin ningún paso previo.
+
+> Si el Hub avisa de que el proyecto se hizo con otra versión, aquí se puede aceptar sin miedo:
+> `Assets/` solo contiene archivos `.cs`, que no tienen formato serializado que migrar.
 
 > `Library/`, `*.csproj` y `*.sln` los genera Unity y están en `.gitignore`. No los subas.
 
